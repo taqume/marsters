@@ -7,7 +7,6 @@ export default {
       favorites: 'Favoriler',
     },
     difficulty: {
-      original: 'Orijinal',
       beginner: 'Başlangıç',
       intermediate: 'Orta',
       advanced: 'Gelişmiş',
@@ -20,6 +19,7 @@ export default {
       backToLibrary: 'Kütüphaneye Dön',
       addToFavorites: 'Favorilere Ekle',
       removeFromFavorites: 'Favorilerden Çıkar',
+      original: 'Orijinal',
     },
     statistics: {
       title: 'Okuma İstatistikleri',
@@ -32,7 +32,6 @@ export default {
       minutes: 'dakika',
       hours: 'saat',
       readBy: {
-        original: 'Orijinal Okundu',
         beginner: 'Başlangıç Okundu',
         intermediate: 'Orta Okundu',
         advanced: 'Gelişmiş Okundu',
