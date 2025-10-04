@@ -1,9 +1,6 @@
 import React from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
 import { Article } from '@models/Article';
 import { Book } from '../Book/Book';
-import { BookshelfFallback } from './BookshelfFallback';
 
 interface BookshelfProps {
   articles: Article[];
@@ -12,73 +9,64 @@ interface BookshelfProps {
 }
 
 /**
- * 3D Bookshelf Component
- * Displays articles as books on a virtual shelf
+ * Bookshelf Component with Horizontal Scrolling Shelves
+ * Displays articles as realistic books on scrollable shelves
  */
 export const Bookshelf: React.FC<BookshelfProps> = ({ 
   articles, 
   onBookSelect,
-  selectedArticle 
 }) => {
-  // Fallback to 2D if WebGL not supported
-  if (typeof window !== 'undefined' && !window.WebGLRenderingContext) {
-    return (
-      <BookshelfFallback 
-        articles={articles} 
-        onBookSelect={onBookSelect} 
-      />
-    );
+  // Group books into shelves (8 books per shelf)
+  const booksPerShelf = 8;
+  const shelves: Article[][] = [];
+  
+  for (let i = 0; i < articles.length; i += booksPerShelf) {
+    shelves.push(articles.slice(i, i + booksPerShelf));
   }
 
-  // Calculate book positions in a grid layout
-  const booksPerShelf = 5;
-  const getBookPosition = (index: number): [number, number, number] => {
-    const row = Math.floor(index / booksPerShelf);
-    const col = index % booksPerShelf;
-    
-    return [
-      (col - booksPerShelf / 2) * 1.5,
-      -row * 1.5,
-      0
-    ];
-  };
-
   return (
-    <div className="w-full h-[600px] bg-gradient-to-b from-gray-100 to-gray-200 dark:from-dark-bg dark:to-dark-surface rounded-xl shadow-2xl">
-      <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
-        {/* Lighting */}
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={0.5} />
+    <div className="w-full min-h-[600px] bg-gradient-to-b from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 rounded-xl shadow-2xl overflow-hidden">
+      <div className="py-8 px-4 space-y-12">
+        {shelves.map((shelfBooks, shelfIndex) => (
+          <div key={shelfIndex} className="shelf-container relative">
+            {/* Shelf Background Bar (Modern blue-gray) */}
+            <div className="shelf-board absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-b from-slate-600 via-slate-700 to-slate-800 rounded-sm shadow-lg">
+              {/* Metallic shine effect */}
+              <div className="absolute inset-0 opacity-30" style={{
+                backgroundImage: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
+              }} />
+              {/* Shelf edge highlight */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-slate-400" />
+            </div>
 
-        {/* Environment */}
-        <Environment preset="city" />
+            {/* Books Container - NO horizontal scroll, fixed grid */}
+            <div className="books-row pb-4 mb-3">
+              <div className="flex items-end justify-center space-x-4 px-4 pb-2">
+                {shelfBooks.map((article) => (
+                  <Book
+                    key={article.id}
+                    article={article}
+                    onClick={() => onBookSelect(article)}
+                  />
+                ))}
+              </div>
+            </div>
 
-        {/* Books */}
-        {articles.map((article, index) => (
-          <Book
-            key={article.id}
-            article={article}
-            position={getBookPosition(index)}
-            onClick={() => onBookSelect(article)}
-            isSelected={selectedArticle?.id === article.id}
-          />
+            {/* Shelf Support (Side brackets) */}
+            <div className="absolute bottom-0 left-2 w-1 h-8 bg-gradient-to-r from-slate-800 to-slate-700 rounded-full shadow-md" />
+            <div className="absolute bottom-0 right-2 w-1 h-8 bg-gradient-to-r from-slate-700 to-slate-800 rounded-full shadow-md" />
+          </div>
         ))}
+      </div>
 
-        {/* Camera controls */}
-        <OrbitControls 
-          enablePan={false}
-          minDistance={5}
-          maxDistance={15}
-          maxPolarAngle={Math.PI / 2}
-        />
-
-        {/* Shelf background */}
-        <mesh position={[0, 0, -0.5]} receiveShadow>
-          <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial color="#8B7355" roughness={0.9} />
-        </mesh>
-      </Canvas>
+      {/* Info Text */}
+      <div className="text-center pb-6 text-gray-600 dark:text-gray-400 text-sm">
+        {articles.length > 0 ? (
+          <p>Showing {articles.length} articles on {shelves.length} {shelves.length === 1 ? 'shelf' : 'shelves'}</p>
+        ) : (
+          <p>No articles found</p>
+        )}
+      </div>
     </div>
   );
 };
