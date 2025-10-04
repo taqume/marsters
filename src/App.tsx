@@ -40,7 +40,67 @@ function App() {
   }, [searchQuery, language]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark-bg transition-colors">
+    <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors relative overflow-hidden">
+      {/* Space Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        {/* Stars Layer 1 - Small stars */}
+        <div className="absolute inset-0 opacity-60">
+          {[...Array(100)].map((_, i) => (
+            <div
+              key={`star-small-${i}`}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                width: Math.random() * 2 + 1 + 'px',
+                height: Math.random() * 2 + 1 + 'px',
+                top: Math.random() * 100 + '%',
+                left: Math.random() * 100 + '%',
+                backgroundColor: theme === 'dark' ? '#ffffff' : '#fbbf24',
+                animationDelay: Math.random() * 3 + 's',
+                animationDuration: Math.random() * 2 + 2 + 's',
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Stars Layer 2 - Medium stars */}
+        <div className="absolute inset-0 opacity-40">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={`star-medium-${i}`}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                width: Math.random() * 3 + 2 + 'px',
+                height: Math.random() * 3 + 2 + 'px',
+                top: Math.random() * 100 + '%',
+                left: Math.random() * 100 + '%',
+                backgroundColor: theme === 'dark' ? '#ffffff' : '#f59e0b',
+                animationDelay: Math.random() * 3 + 's',
+                animationDuration: Math.random() * 3 + 2 + 's',
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Stars Layer 3 - Large stars */}
+        <div className="absolute inset-0 opacity-30">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={`star-large-${i}`}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                width: Math.random() * 4 + 3 + 'px',
+                height: Math.random() * 4 + 3 + 'px',
+                top: Math.random() * 100 + '%',
+                left: Math.random() * 100 + '%',
+                backgroundColor: theme === 'dark' ? '#ffffff' : '#eab308',
+                animationDelay: Math.random() * 3 + 's',
+                animationDuration: Math.random() * 4 + 3 + 's',
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      
       {/* Header with Search */}
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
