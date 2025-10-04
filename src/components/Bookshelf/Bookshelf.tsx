@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 interface BookshelfProps {
   articles: Article[];
-  onBookSelect: (article: Article) => void;
+  onBookSelect: (article: Article, position: { x: number; y: number }) => void;
   selectedArticle: Article | null;
   currentPage: number;
   totalPages: number;
@@ -96,7 +96,12 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
                     >
                       <Book
                         article={article}
-                        onClick={() => onBookSelect(article)}
+                        onClick={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          const centerX = rect.left + rect.width / 2;
+                          const centerY = rect.top + rect.height / 2;
+                          onBookSelect(article, { x: centerX, y: centerY });
+                        }}
                       />
                     </motion.div>
                   ))}

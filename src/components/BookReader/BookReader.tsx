@@ -11,8 +11,8 @@ import { useReadingTimer } from '@hooks/useReadingTimer';
 
 interface BookReaderProps {
   article: Article;
+  clickPosition: { x: number; y: number };
   onClose: () => void;
-  initialPosition?: { x: number; y: number; width: number; height: number };
 }
 
 /**
@@ -20,9 +20,9 @@ interface BookReaderProps {
  * Features: Book opening/closing animations, page flipping, realistic 3D effects
  */
 export const BookReader: React.FC<BookReaderProps> = ({ 
-  article, 
-  onClose,
-  initialPosition 
+  article,
+  clickPosition,
+  onClose
 }) => {
   const { t } = useTranslation();
   const { language } = useSettingsStore();
@@ -42,6 +42,20 @@ export const BookReader: React.FC<BookReaderProps> = ({
 
   // Track reading time
   useReadingTimer(article.id, isReading);
+
+  // Lock body scroll when book is open
+  useEffect(() => {
+    // Save original overflow style
+    const originalOverflow = document.body.style.overflow;
+    
+    // Lock scroll
+    document.body.style.overflow = 'hidden';
+    
+    // Cleanup: restore scroll when component unmounts
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
   useEffect(() => {
     if (isReading) {
@@ -294,30 +308,23 @@ export const BookReader: React.FC<BookReaderProps> = ({
             ref={bookRef}
             className="relative"
             style={{ perspective: '3000px' }}
-            initial={initialPosition ? {
-              x: initialPosition.x - window.innerWidth / 2,
-              y: initialPosition.y - window.innerHeight / 2,
-              scale: 0.2,
-              rotateY: 0,
-            } : {
-              scale: 0.2,
-              rotateY: 0,
+            initial={{
+              x: clickPosition.x - window.innerWidth / 2,
+              y: clickPosition.y - window.innerHeight / 2,
+              scale: 0.1,
+              rotateX: -90,
             }}
-            animate={isAnimatingClose ? (initialPosition ? {
-              x: initialPosition.x - window.innerWidth / 2,
-              y: initialPosition.y - window.innerHeight / 2,
-              scale: 0.2,
-              rotateY: 0,
-              transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
+            animate={isAnimatingClose ? {
+              x: clickPosition.x - window.innerWidth / 2,
+              y: clickPosition.y - window.innerHeight / 2,
+              scale: 0.1,
+              rotateX: -90,
+              transition: { duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }
             } : {
-              scale: 0,
-              rotateY: 0,
-              transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
-            }) : {
               x: 0,
               y: 0,
               scale: 1,
-              rotateY: 0,
+              rotateX: 0,
               transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
             }}
             onClick={(e) => e.stopPropagation()}

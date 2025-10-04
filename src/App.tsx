@@ -17,6 +17,7 @@ function App() {
   const { i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [clickPosition, setClickPosition] = useState<{ x: number; y: number } | null>(null);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -370,7 +371,10 @@ function App() {
           {/* Bookshelf with Pagination */}
           <Bookshelf
             articles={paginatedData.articles}
-            onBookSelect={setSelectedArticle}
+            onBookSelect={(article, position) => {
+              setSelectedArticle(article);
+              setClickPosition(position);
+            }}
             selectedArticle={selectedArticle}
             currentPage={paginatedData.currentPage}
             totalPages={paginatedData.totalPages}
@@ -380,9 +384,10 @@ function App() {
       </main>
 
       {/* Book Reader Modal */}
-      {selectedArticle && (
+      {selectedArticle && clickPosition && (
         <BookReader
           article={selectedArticle}
+          clickPosition={clickPosition}
           onClose={() => setSelectedArticle(null)}
         />
       )}

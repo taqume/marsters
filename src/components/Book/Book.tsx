@@ -5,7 +5,7 @@ import { articleService } from '@services/ArticleService';
 
 interface BookProps {
   article: Article;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 /**
