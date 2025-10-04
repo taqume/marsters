@@ -1,5 +1,4 @@
 import { Article } from '@models/Article';
-import { Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface BookProps {
@@ -8,178 +7,180 @@ interface BookProps {
 }
 
 /**
- * Modern Book Component with Enhanced Visual Effects
- * Features: Glow effects, category badge, animated hover states
+ * Realistic 3D Book Component
+ * Features: Thick cover, visible pages, realistic depth
  */
 export const Book: React.FC<BookProps> = ({ article, onClick }) => {
-  // Generate a lighter color for glow effect
-  const glowColor = article.coverColor + '40';
-
   return (
     <motion.div
       onClick={onClick}
       className="book-container group cursor-pointer flex-shrink-0 relative"
       style={{
-        perspective: '1500px',
-        width: '150px',
-        height: '220px',
+        perspective: '2000px',
+        width: '160px',
+        height: '240px',
       }}
-      initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
-      animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ 
         type: 'spring', 
-        stiffness: 300, 
-        damping: 25,
-        duration: 0.6
+        stiffness: 200, 
+        damping: 20
       }}
       whileHover={{ 
-        scale: 1.05, 
-        rotateY: -15,
+        y: -15,
         transition: { duration: 0.3 }
       }}
-      whileTap={{ 
-        scale: 0.95,
-        transition: { duration: 0.1 }
-      }}
     >
-      {/* Glow effect on hover */}
+      {/* Book Shadow */}
       <div 
-        className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-60 blur-xl transition-all duration-500"
-        style={{
-          background: `radial-gradient(circle, ${glowColor}, transparent)`,
-        }}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140px] h-3 bg-black/30 dark:bg-black/50 blur-lg rounded-full transition-all duration-300 group-hover:w-[120px] group-hover:opacity-60"
       />
 
       <div 
-        className="book relative transition-all duration-500 ease-out group-hover:scale-110"
+        className="book relative"
         style={{
           width: '100%',
           height: '100%',
           transformStyle: 'preserve-3d',
-          transform: 'rotateY(-10deg)',
+          transform: 'rotateY(-5deg)',
         }}
       >
-        {/* Book Cover with Modern Design */}
+        {/* Book Cover - Front */}
         <div
-          className="book-cover absolute inset-0 rounded-r-lg shadow-2xl flex flex-col justify-between p-3 overflow-hidden group-hover:shadow-3xl transition-all duration-500"
+          className="book-cover absolute inset-0 rounded-r-md overflow-hidden"
           style={{
             backgroundColor: article.coverColor,
-            backgroundImage: `
-              linear-gradient(135deg, ${article.coverColor}ee 0%, ${article.coverColor} 50%, ${article.coverColor}cc 100%),
-              radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent)
+            backgroundImage: `linear-gradient(135deg, ${article.coverColor}f0 0%, ${article.coverColor} 60%, ${article.coverColor}dd 100%)`,
+            boxShadow: `
+              8px 8px 20px rgba(0, 0, 0, 0.4),
+              inset -5px 0 15px rgba(0, 0, 0, 0.3),
+              inset 5px 5px 10px rgba(255, 255, 255, 0.1)
             `,
-            boxShadow: '10px 10px 30px rgba(0, 0, 0, 0.4), inset -3px 0 8px rgba(0, 0, 0, 0.2)',
+            transform: 'translateZ(15px)',
           }}
         >
-          {/* Decorative pattern overlay */}
+          {/* Paper texture overlay */}
           <div 
-            className="absolute inset-0 opacity-10"
+            className="absolute inset-0 opacity-[0.03]"
             style={{
-              backgroundImage: `repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255,255,255,0.1) 10px,
-                rgba(255,255,255,0.1) 20px
-              )`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E")`,
             }}
           />
 
-          {/* Title */}
-          <div className="relative z-10 text-white font-bold text-xs leading-tight drop-shadow-lg mt-8">
-            {article.title}
-          </div>
-          
-          {/* Bottom Info */}
-          <div className="relative z-10 space-y-1">
-            <div className="text-white/90 text-[10px] font-medium">
+          {/* Content */}
+          <div className="relative h-full flex flex-col justify-between p-5">
+            {/* Title */}
+            <div className="text-white font-bold text-sm leading-tight drop-shadow-lg pt-8">
+              {article.title}
+            </div>
+            
+            {/* Author */}
+            <div className="text-white/90 text-xs font-medium drop-shadow-md pb-8">
               {article.author}
             </div>
-            <div className="flex items-center space-x-1 text-white/70 text-[9px]">
-              <Calendar className="w-2.5 h-2.5" />
-              <span>{article.date}</span>
-            </div>
           </div>
 
-          {/* Spine shadow effect */}
+          {/* Left shadow (spine shadow) */}
           <div 
-            className="absolute left-0 top-0 bottom-0 w-3"
+            className="absolute left-0 top-0 bottom-0 w-4"
             style={{
-              background: 'linear-gradient(to right, rgba(0,0,0,0.4), transparent)',
+              background: 'linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2), transparent)',
             }}
           />
 
-          {/* Shine effect on hover */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          {/* Highlight on right edge */}
+          <div 
+            className="absolute right-0 top-0 bottom-0 w-1"
+            style={{
+              background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.2))',
+            }}
+          />
         </div>
 
-        {/* Book Spine (3D effect) with enhanced design */}
+        {/* Book Spine (3D side) */}
         <div
-          className="book-spine absolute left-0 top-0 bottom-0 rounded-l-lg"
+          className="book-spine absolute left-0 top-0 bottom-0 rounded-l-md"
           style={{
-            width: '32px',
+            width: '45px',
             backgroundColor: article.coverColor,
-            transform: 'rotateY(-90deg) translateX(-16px)',
+            transform: 'rotateY(-90deg) translateX(-22.5px)',
             transformOrigin: 'right',
-            backgroundImage: `
-              linear-gradient(to right, ${article.coverColor}aa, ${article.coverColor}),
-              repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 6px)
-            `,
-            boxShadow: '-3px 0 15px rgba(0, 0, 0, 0.4)',
+            backgroundImage: `linear-gradient(to right, ${article.coverColor}cc, ${article.coverColor}f0, ${article.coverColor}dd)`,
+            boxShadow: 'inset 2px 0 5px rgba(0,0,0,0.4), -5px 0 15px rgba(0, 0, 0, 0.5)',
           }}
         >
-          <div className="h-full flex items-center justify-center px-1">
+          <div className="h-full flex items-center justify-center px-2">
             <span 
-              className="text-white text-[9px] font-bold writing-mode-vertical transform rotate-180 text-center"
+              className="text-white text-[10px] font-bold text-center drop-shadow-md"
               style={{
                 writingMode: 'vertical-rl',
                 textOrientation: 'mixed',
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
               }}
             >
-              {article.title.substring(0, 35)}
+              {article.title.substring(0, 30)}
             </span>
           </div>
         </div>
 
-        {/* Book Pages (side view) with more detail */}
+        {/* Book Pages (realistic stack) */}
         <div
-          className="book-pages absolute right-0 top-0 bottom-0"
+          className="book-pages absolute top-1 bottom-1 right-0"
           style={{
-            width: '7px',
-            background: 'linear-gradient(to right, #f5f3f0, #e5e3df, #f9f7f4)',
-            borderRadius: '0 3px 3px 0',
-            boxShadow: 'inset -2px 0 4px rgba(0, 0, 0, 0.15)',
+            width: '12px',
+            transform: 'translateZ(-1px)',
+            background: `
+              linear-gradient(to right, 
+                #e8e6e1 0%, 
+                #f5f3ee 20%, 
+                #ffffff 40%,
+                #f9f7f2 60%,
+                #ece9e4 80%,
+                #e0ddd8 100%
+              )
+            `,
+            borderRadius: '0 2px 2px 0',
+            boxShadow: `
+              inset -3px 0 8px rgba(0, 0, 0, 0.3),
+              2px 0 4px rgba(0, 0, 0, 0.2)
+            `,
           }}
         >
-          {/* Page lines */}
-          {[...Array(18)].map((_, i) => (
+          {/* Individual page lines */}
+          {[...Array(45)].map((_, i) => (
             <div
               key={i}
-              className="absolute left-0 right-0 h-px bg-gray-400/30"
-              style={{ top: `${(i + 1) * 10}px` }}
+              className="absolute left-0 right-0"
+              style={{ 
+                top: `${i * 5}px`,
+                height: '1px',
+                background: i % 3 === 0 
+                  ? 'rgba(0, 0, 0, 0.08)' 
+                  : 'rgba(0, 0, 0, 0.04)',
+              }}
             />
           ))}
+          
+          {/* Page depth effect */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 50%, transparent 100%)',
+            }}
+          />
         </div>
-      </div>
 
-      {/* Enhanced Hover Tooltip */}
-      <motion.div 
-        className="absolute -bottom-24 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-2 z-20 pointer-events-none"
-        initial={{ opacity: 0, y: 10, scale: 0.8 }}
-        whileHover={{ opacity: 1, y: -10, scale: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-gray-700 backdrop-blur-sm">
-          <div className="font-bold text-sm mb-1">{article.category}</div>
-          <div className="text-gray-300 text-xs flex items-center space-x-1">
-            <Calendar className="w-3 h-3" />
-            <span>{article.date}</span>
-          </div>
-          {/* Arrow pointing up */}
-          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-b-4 border-b-gray-900" />
-        </div>
-      </motion.div>
+        {/* Back Cover (slight depth) */}
+        <div
+          className="absolute inset-0 rounded-md"
+          style={{
+            backgroundColor: article.coverColor,
+            transform: 'translateZ(-15px)',
+            filter: 'brightness(0.7)',
+            boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)',
+          }}
+        />
+      </div>
     </motion.div>
   );
 };

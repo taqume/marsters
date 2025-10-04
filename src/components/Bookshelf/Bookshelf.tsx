@@ -17,8 +17,8 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
   articles, 
   onBookSelect,
 }) => {
-  // Group books into shelves (8 books per shelf)
-  const booksPerShelf = 8;
+  // Group books into shelves (6 books per shelf for better spacing)
+  const booksPerShelf = 6;
   const shelves: Article[][] = [];
   
   for (let i = 0; i < articles.length; i += booksPerShelf) {
@@ -26,39 +26,26 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
   }
 
   return (
-    <div className="w-full min-h-[700px] relative">
+    <div className="w-full min-h-[700px] relative flex justify-center">
       {/* Content Container */}
-      <div className="relative z-10 py-10 px-6">
+      <div className="relative z-10 py-10 px-6 max-w-[1300px] w-full">
         {/* Shelves - Space Station Modules */}
-        <div className="space-y-20">
+        <div className="space-y-24">
           {shelves.map((shelfBooks, shelfIndex) => (
             <div key={shelfIndex} className="shelf-container relative">
-              {/* Space Station Shelf Board - Clean Glassmorphism */}
-              <div className="shelf-board absolute bottom-0 left-0 right-0 h-4 backdrop-blur-md bg-gradient-to-b from-blue-300/20 via-blue-400/15 to-blue-500/20 dark:from-blue-700/25 dark:via-blue-800/20 dark:to-blue-900/25 rounded-lg shadow-xl border-t border-blue-200/40 dark:border-blue-400/30">
-                {/* Glossy top edge */}
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-blue-300/50 to-transparent" />
-                
-                {/* Bottom depth */}
-                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-b from-transparent to-blue-500/30 dark:to-blue-400/20 rounded-b-lg" />
-              </div>
-
               {/* Books Container */}
               <div className="books-row pb-6 mb-4">
-                <div className="flex items-end justify-center space-x-7 px-6 pb-4">
+                <div className="flex items-end justify-center gap-8 px-6 pb-4">
                   {shelfBooks.map((article, index) => (
                     <motion.div
                       key={article.id}
-                      initial={{ opacity: 0, y: 50, rotateY: -30 }}
-                      animate={{ opacity: 1, y: 0, rotateY: 0 }}
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
                       transition={{ 
-                        delay: index * 0.1,
+                        delay: index * 0.08,
                         type: 'spring',
-                        stiffness: 300,
-                        damping: 25
-                      }}
-                      whileHover={{ 
-                        y: -10,
-                        transition: { duration: 0.2 }
+                        stiffness: 200,
+                        damping: 20
                       }}
                     >
                       <Book
@@ -68,6 +55,20 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
                     </motion.div>
                   ))}
                 </div>
+              </div>
+
+              {/* Space Station Shelf Board - Fits book width */}
+              <div 
+                className="shelf-board absolute bottom-0 left-1/2 -translate-x-1/2 h-4 backdrop-blur-md bg-gradient-to-b from-blue-300/20 via-blue-400/15 to-blue-500/20 dark:from-blue-700/25 dark:via-blue-800/20 dark:to-blue-900/25 rounded-lg shadow-xl border-t border-blue-200/40 dark:border-blue-400/30"
+                style={{
+                  width: `${shelfBooks.length * 180 + 40}px`,
+                }}
+              >
+                {/* Glossy top edge */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-blue-300/50 to-transparent" />
+                
+                {/* Bottom depth */}
+                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-b from-transparent to-blue-500/30 dark:to-blue-400/20 rounded-b-lg" />
               </div>
             </div>
           ))}
