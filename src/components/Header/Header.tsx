@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '@stores/settingsStore';
 import { Language, ThemeMode } from '@models/Article';
-import { Sun, Moon, Globe } from 'lucide-react';
+import { Sun, Moon, Globe, Sparkles } from 'lucide-react';
 import { SearchBar } from '@components/SearchBar/SearchBar';
 
 interface HeaderProps {
@@ -10,8 +10,8 @@ interface HeaderProps {
 }
 
 /**
- * Header Component
- * Displays app title, search bar, language switcher, and theme toggle
+ * Modern Header Component with Glassmorphism
+ * Displays app branding, search, and controls with contemporary design
  */
 export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) => {
   const { t, i18n } = useTranslation();
@@ -24,30 +24,42 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-dark-bg shadow-lg transition-colors border-b border-gray-200 dark:border-gray-800">
-      <div className="container mx-auto px-6 py-3">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-purple-200/50 dark:border-purple-800/30 shadow-lg transition-all">
+      {/* Gradient Accent Line */}
+      <div className="h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 animate-gradient-x" />
+      
+      <div className="container mx-auto px-6 py-4">
         {/* Top Row: Logo, Controls */}
-        <div className="flex items-center justify-between mb-3">
-          {/* Logo/Title */}
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center shadow-md">
-              <span className="text-white font-bold text-xl">🧬</span>
+        <div className="flex items-center justify-between mb-4">
+          {/* Logo/Title - Modern Branding */}
+          <div className="flex items-center space-x-4 group">
+            <div className="relative">
+              {/* Glow effect behind logo */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity" />
+              {/* Logo */}
+              <div className="relative w-12 h-12 bg-gradient-to-br from-purple-600 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
+                <Sparkles className="w-6 h-6 text-white" strokeWidth={2.5} />
+              </div>
             </div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-              {t('header.title')}
-            </h1>
+            
+            <div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+                {t('header.title')}
+              </h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Explore • Learn • Discover</p>
+            </div>
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center space-x-3">
+          {/* Controls - Modern Pills */}
+          <div className="flex items-center space-x-2">
             {/* Language Switcher */}
             <button
               onClick={handleLanguageChange}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-dark-surface hover:bg-gray-200 dark:hover:bg-dark-border transition-colors"
+              className="group flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 hover:from-purple-200 hover:to-pink-200 dark:hover:from-purple-800/40 dark:hover:to-pink-800/40 transition-all duration-300 border border-purple-200/50 dark:border-purple-700/50 shadow-md hover:shadow-lg"
               aria-label="Change language"
             >
-              <Globe className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Globe className="w-4 h-4 text-purple-600 dark:text-purple-400 group-hover:rotate-12 transition-transform" />
+              <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">
                 {language.toUpperCase()}
               </span>
             </button>
@@ -55,20 +67,23 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-dark-surface hover:bg-gray-200 dark:hover:bg-dark-border transition-colors"
+              className="group relative p-2.5 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-blue-900/30 dark:to-purple-900/30 hover:from-yellow-200 hover:to-orange-200 dark:hover:from-blue-800/40 dark:hover:to-purple-800/40 transition-all duration-300 border border-yellow-200/50 dark:border-blue-700/50 shadow-md hover:shadow-lg overflow-hidden"
               aria-label="Toggle theme"
             >
               {theme === ThemeMode.LIGHT ? (
-                <Moon className="w-5 h-5 text-gray-700" />
+                <Moon className="w-5 h-5 text-indigo-600 group-hover:rotate-12 transition-transform" />
               ) : (
-                <Sun className="w-5 h-5 text-yellow-400" />
+                <Sun className="w-5 h-5 text-yellow-400 group-hover:rotate-90 transition-transform" />
               )}
+              
+              {/* Ripple effect */}
+              <div className="absolute inset-0 bg-white/20 dark:bg-white/10 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-500 rounded-full" />
             </button>
           </div>
         </div>
 
-        {/* Bottom Row: Search Bar */}
-        <div className="max-w-2xl mx-auto">
+        {/* Bottom Row: Modern Search Bar */}
+        <div className="max-w-3xl mx-auto">
           <SearchBar value={searchQuery} onChange={onSearchChange} />
         </div>
       </div>
