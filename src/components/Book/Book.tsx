@@ -20,8 +20,8 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
       className="book-container group cursor-pointer flex-shrink-0 relative"
       style={{
         perspective: '1500px',
-        width: '150px',
-        height: '220px',
+        width: '145px',
+        height: '215px',
       }}
     >
       {/* Glow effect on hover */}

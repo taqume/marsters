@@ -26,26 +26,6 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
 
   return (
     <div className="w-full min-h-[700px] relative">
-      {/* Ambient Background with Gradient Mesh */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20 rounded-3xl overflow-hidden">
-        {/* Animated gradient orbs */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-300/30 dark:bg-purple-600/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-300/30 dark:bg-pink-600/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-300/20 dark:bg-blue-600/10 rounded-full blur-3xl animate-pulse delay-500" />
-        
-        {/* Subtle pattern overlay */}
-        <div 
-          className="absolute inset-0 opacity-5 dark:opacity-10"
-          style={{
-            backgroundImage: `
-              radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
-              repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(147, 51, 234, 0.03) 20px, rgba(147, 51, 234, 0.03) 40px)
-            `,
-          }}
-        />
-      </div>
-
       {/* Content Container */}
       <div className="relative z-10 py-10 px-6">
         {/* Shelves */}
@@ -53,7 +33,7 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
           {shelves.map((shelfBooks, shelfIndex) => (
             <div key={shelfIndex} className="shelf-container relative">
               {/* Modern Shelf Board */}
-              <div className="shelf-board absolute bottom-0 -left-8 -right-8 h-4 bg-gradient-to-b from-gray-300 via-gray-400 to-gray-500 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 rounded-lg shadow-2xl">
+              <div className="shelf-board absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-b from-gray-300 via-gray-400 to-gray-500 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 rounded-lg shadow-2xl">
                 {/* Glass effect on top */}
                 <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                 
