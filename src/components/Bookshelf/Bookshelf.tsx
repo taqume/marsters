@@ -30,9 +30,13 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
     );
   }
 
-  // Calculate book positions in a grid layout
+  // Calculate book positions so upper shelves are filled first
   const booksPerShelf = 5;
+  const totalBooks = articles.length;
+  const totalRows = Math.ceil(totalBooks / booksPerShelf);
+  // Fill upper shelves first: books are packed from top row to bottom
   const getBookPosition = (index: number): [number, number, number] => {
+    // Compute row and col so that first row is always full if possible
     const row = Math.floor(index / booksPerShelf);
     const col = index % booksPerShelf;
     return [
@@ -53,16 +57,24 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
         {/* Environment */}
         <Environment preset="city" />
 
-        {/* Books */}
-        {articles.map((article, index) => (
-          <Book
-            key={article.id}
-            article={article}
-            position={getBookPosition(index)}
-            onClick={() => onBookSelect(article)}
-            isSelected={selectedArticle?.id === article.id}
-          />
-        ))}
+        {/* Books - fill upper shelves first */}
+        {Array.from({ length: totalRows }).flatMap((_, rowIdx) => {
+          // For each row, fill up to booksPerShelf books
+          return Array.from({ length: booksPerShelf }).map((_, colIdx) => {
+            const bookIdx = rowIdx * booksPerShelf + colIdx;
+            if (bookIdx >= totalBooks) return null;
+            const article = articles[bookIdx];
+            return (
+              <Book
+                key={article.id}
+                article={article}
+                position={[(colIdx - booksPerShelf / 2) * 1.5, -rowIdx * 1.5, 0]}
+                onClick={() => onBookSelect(article)}
+                isSelected={selectedArticle?.id === article.id}
+              />
+            );
+          });
+        })}
 
         {/* Realistic shelves under each row */}
         {Array.from({ length: Math.ceil(articles.length / booksPerShelf) }).map((_, rowIdx) => (
