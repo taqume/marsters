@@ -56,13 +56,17 @@ export const Book: React.FC<BookProps> = ({ article, position, onClick, isSelect
       {!isSelected && (
         <Text
           position={[0, 0, 0.08]}
-          fontSize={0.08}
+          fontSize={0.07}
           color="white"
           anchorX="center"
           anchorY="middle"
-          maxWidth={0.7}
+          maxWidth={0.65}
+          overflowWrap="break-word"
+          textAlign="center"
         >
-          {article.title}
+          {article.title.length > 30
+            ? article.title.slice(0, 27) + '...'
+            : article.title}
         </Text>
       )}
     </group>

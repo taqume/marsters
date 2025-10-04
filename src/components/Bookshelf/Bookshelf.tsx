@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import { Article } from '@models/Article';
@@ -35,7 +35,6 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
   const getBookPosition = (index: number): [number, number, number] => {
     const row = Math.floor(index / booksPerShelf);
     const col = index % booksPerShelf;
-    
     return [
       (col - booksPerShelf / 2) * 1.5,
       -row * 1.5,
@@ -63,6 +62,19 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
             onClick={() => onBookSelect(article)}
             isSelected={selectedArticle?.id === article.id}
           />
+        ))}
+
+        {/* Realistic shelves under each row */}
+        {Array.from({ length: Math.ceil(articles.length / booksPerShelf) }).map((_, rowIdx) => (
+          <mesh
+            key={rowIdx}
+            position={[0, -rowIdx * 1.5 - 0.7, 0]}
+            castShadow
+            receiveShadow
+          >
+            <boxGeometry args={[booksPerShelf * 1.5, 0.15, 0.3]} />
+            <meshStandardMaterial color="#a67c52" roughness={0.8} />
+          </mesh>
         ))}
 
         {/* Camera controls */}
