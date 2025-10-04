@@ -4,7 +4,6 @@ import { Article } from '@models/Article';
 import { articleService } from '@services/ArticleService';
 import { useSettingsStore } from '@stores/settingsStore';
 import { Header } from '@components/Header/Header';
-import { SearchBar } from '@components/SearchBar/SearchBar';
 import { Bookshelf } from '@components/Bookshelf/Bookshelf';
 import { ArticleViewer } from '@components/ArticleViewer/ArticleViewer';
 import './i18n/config';
@@ -42,30 +41,18 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-bg transition-colors">
-      {/* Header */}
-      <Header />
+      {/* Header with Search */}
+      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
       {/* Main Content */}
-      <main className="pt-24 pb-12 px-6">
+      <main className="pt-32 pb-12 px-6">
         <div className="container mx-auto max-w-7xl">
-          {/* Search Bar */}
-          <div className="mb-8">
-            <SearchBar value={searchQuery} onChange={setSearchQuery} />
-          </div>
-
-          {/* 3D Bookshelf */}
+          {/* Bookshelf with Horizontal Scrolling */}
           <Bookshelf
             articles={filteredArticles}
             onBookSelect={setSelectedArticle}
             selectedArticle={selectedArticle}
           />
-
-          {/* Statistics Info */}
-          <div className="mt-8 text-center text-gray-600 dark:text-gray-400">
-            <p className="text-sm">
-              Showing {filteredArticles.length} article{filteredArticles.length !== 1 ? 's' : ''}
-            </p>
-          </div>
         </div>
       </main>
 
