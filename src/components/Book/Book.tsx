@@ -46,45 +46,102 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
           transform: 'rotateY(-5deg)',
         }}
       >
-        {/* Book Cover - Front */}
+        {/* Book Cover - Front - Elegant Space Encyclopedia Style */}
         <div
           className="book-cover absolute inset-0 rounded-r-md overflow-hidden"
           style={{
-            backgroundColor: article.coverColor,
-            backgroundImage: `linear-gradient(135deg, ${article.coverColor}f0 0%, ${article.coverColor} 60%, ${article.coverColor}dd 100%)`,
+            backgroundColor: '#0d0d15',
+            backgroundImage: 'linear-gradient(135deg, #08080c 0%, #0d0d15 50%, #12121d 100%)',
             boxShadow: `
-              8px 8px 20px rgba(0, 0, 0, 0.4),
-              inset -5px 0 15px rgba(0, 0, 0, 0.3),
-              inset 5px 5px 10px rgba(255, 255, 255, 0.1)
+              8px 8px 20px rgba(0, 0, 0, 0.8),
+              inset -5px 0 15px rgba(0, 0, 0, 0.5),
+              inset 2px 2px 8px rgba(255, 215, 0, 0.08)
             `,
             transform: 'translateZ(15px)',
           }}
         >
-          {/* Paper texture overlay */}
+          {/* Subtle Deep Space Nebula - Very Soft */}
           <div 
-            className="absolute inset-0 opacity-[0.03]"
+            className="absolute inset-0 opacity-8"
+            style={{
+              background: `
+                radial-gradient(ellipse 800px 600px at 30% 40%, rgba(79, 70, 229, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 600px 800px at 70% 60%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)
+              `
+            }}
+          />
+
+          {/* Minimal Star Field - Fewer, Elegant Stars */}
+          <div className="absolute inset-0">
+            {/* Carefully placed larger stars */}
+            {[
+              { top: 15, left: 20, size: 1.5, opacity: 0.6 },
+              { top: 35, left: 75, size: 1.2, opacity: 0.5 },
+              { top: 58, left: 30, size: 1.3, opacity: 0.55 },
+              { top: 78, left: 65, size: 1.4, opacity: 0.6 },
+              { top: 25, left: 88, size: 1.1, opacity: 0.5 },
+              { top: 68, left: 12, size: 1.2, opacity: 0.52 },
+            ].map((star, i) => (
+              <div
+                key={`star-${i}`}
+                className="absolute rounded-full bg-white"
+                style={{
+                  width: `${star.size}px`,
+                  height: `${star.size}px`,
+                  top: `${star.top}%`,
+                  left: `${star.left}%`,
+                  opacity: star.opacity,
+                  boxShadow: '0 0 3px rgba(255, 255, 255, 0.6)',
+                }}
+              />
+            ))}
+            
+            {/* Tiny distant stars - Sparse */}
+            {[
+              { top: 10, left: 45 }, { top: 22, left: 55 }, { top: 40, left: 85 },
+              { top: 50, left: 18 }, { top: 72, left: 82 }, { top: 85, left: 40 },
+              { top: 28, left: 12 }, { top: 62, left: 48 }, { top: 82, left: 25 },
+            ].map((star, i) => (
+              <div
+                key={`tiny-star-${i}`}
+                className="absolute w-[0.5px] h-[0.5px] rounded-full bg-white"
+                style={{
+                  top: `${star.top}%`,
+                  left: `${star.left}%`,
+                  opacity: 0.3,
+                  boxShadow: '0 0 1px rgba(255, 255, 255, 0.4)',
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Subtle texture overlay */}
+          <div 
+            className="absolute inset-0 opacity-[0.015]"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E")`,
             }}
           />
 
-          {/* Content */}
+          {/* Content - Encyclopedia Style */}
           <div className="relative h-full flex flex-col justify-between p-5">
             {/* Title */}
-            <div className="text-white font-bold text-sm leading-tight drop-shadow-lg pt-8">
+            <div className="font-serif font-bold text-sm leading-tight pt-8" style={{ color: '#D4AF37', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
               {article.title}
             </div>
             
             {/* Bottom section */}
-            <div className="space-y-2 pb-2">
+            <div className="space-y-3 pb-2">
               {/* Author */}
-              <div className="text-white/90 text-xs font-medium drop-shadow-md">
+              <div className="text-xs font-medium" style={{ color: '#C5A572', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
                 {article.author}
               </div>
               
-              {/* Book ID */}
-              <div className="text-white/60 text-[9px] font-mono drop-shadow">
-                #{article.id}
+              {/* Book ID - Centered at bottom */}
+              <div className="flex justify-center">
+                <div className="text-2xl font-serif font-bold tracking-wider" style={{ color: '#FFD700', textShadow: '0 2px 6px rgba(212, 175, 55, 0.6), 0 0 10px rgba(255, 215, 0, 0.3)' }}>
+                  {article.id}
+                </div>
               </div>
             </div>
           </div>
@@ -106,24 +163,34 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
           />
         </div>
 
-        {/* Book Spine (3D side) */}
+        {/* Book Spine (3D side) - Elegant Space Style */}
         <div
-          className="book-spine absolute left-0 top-0 bottom-0 rounded-l-md"
+          className="book-spine absolute left-0 top-0 bottom-0 rounded-l-md overflow-hidden"
           style={{
             width: '45px',
-            backgroundColor: article.coverColor,
+            backgroundColor: '#0d0d15',
             transform: 'rotateY(-90deg) translateX(-22.5px)',
             transformOrigin: 'right',
-            backgroundImage: `linear-gradient(to right, ${article.coverColor}cc, ${article.coverColor}f0, ${article.coverColor}dd)`,
-            boxShadow: 'inset 2px 0 5px rgba(0,0,0,0.4), -5px 0 15px rgba(0, 0, 0, 0.5)',
+            backgroundImage: 'linear-gradient(to right, #000000, #0d0d15, #08080c)',
+            boxShadow: 'inset 2px 0 5px rgba(0,0,0,0.8), -5px 0 15px rgba(0, 0, 0, 0.7)',
           }}
         >
-          <div className="h-full flex items-center justify-center px-2">
+          {/* Very subtle space accent */}
+          <div 
+            className="absolute inset-0 opacity-5"
+            style={{
+              background: 'radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.3) 0%, transparent 70%)'
+            }}
+          />
+          
+          <div className="h-full flex items-center justify-center px-2 relative z-10">
             <span 
-              className="text-white text-[10px] font-bold text-center drop-shadow-md"
+              className="text-[10px] font-serif font-bold text-center"
               style={{
                 writingMode: 'vertical-rl',
                 textOrientation: 'mixed',
+                color: '#D4AF37',
+                textShadow: '0 1px 3px rgba(0,0,0,0.5)',
               }}
             >
               {article.title.substring(0, 30)}
@@ -178,14 +245,14 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
           />
         </div>
 
-        {/* Back Cover (slight depth) */}
+        {/* Back Cover (slight depth) - Space Encyclopedia Style */}
         <div
           className="absolute inset-0 rounded-md"
           style={{
-            backgroundColor: article.coverColor,
+            backgroundColor: '#050508',
             transform: 'translateZ(-15px)',
-            filter: 'brightness(0.7)',
-            boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.5)',
+            filter: 'brightness(0.4)',
+            boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.8)',
           }}
         />
       </div>

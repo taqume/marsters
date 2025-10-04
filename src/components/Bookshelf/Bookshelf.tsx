@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Article } from '@models/Article';
 import { Book } from '../Book/Book';
 import { motion } from 'framer-motion';
@@ -26,6 +26,46 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
   // Group books into shelves (6 books per shelf for better spacing)
   const booksPerShelf = 6;
   const shelves: Article[][] = [];
+  
+  // State for editable page input
+  const [pageInput, setPageInput] = useState(currentPage.toString());
+  const [isEditing, setIsEditing] = useState(false);
+  
+  // Update input when currentPage changes externally
+  React.useEffect(() => {
+    setPageInput(currentPage.toString());
+  }, [currentPage]);
+  
+  // Handle page input change
+  const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only allow numbers
+    if (/^\d*$/.test(value)) {
+      setPageInput(value);
+    }
+  };
+  
+  // Handle page input submit
+  const handlePageInputSubmit = () => {
+    const pageNum = parseInt(pageInput, 10);
+    if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
+      onPageChange(pageNum);
+    } else {
+      // Reset to current page if invalid
+      setPageInput(currentPage.toString());
+    }
+    setIsEditing(false);
+  };
+  
+  // Handle key press
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handlePageInputSubmit();
+    } else if (e.key === 'Escape') {
+      setPageInput(currentPage.toString());
+      setIsEditing(false);
+    }
+  };
   
   for (let i = 0; i < articles.length; i += booksPerShelf) {
     shelves.push(articles.slice(i, i + booksPerShelf));
@@ -113,14 +153,30 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
               </span>
             </button>
 
-            {/* Page Info */}
+            {/* Page Info with Editable Input */}
             <div className="flex items-center gap-3 px-6 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg shadow-lg border border-blue-200 dark:border-blue-700">
               <span className="text-gray-700 dark:text-gray-300 font-medium">
                 Page
               </span>
-              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {currentPage}
-              </span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={pageInput}
+                  onChange={handlePageInputChange}
+                  onBlur={handlePageInputSubmit}
+                  onKeyDown={handleKeyPress}
+                  autoFocus
+                  className="w-12 text-center text-2xl font-bold text-blue-600 dark:text-blue-400 bg-transparent border-b-2 border-blue-600 dark:border-blue-400 focus:outline-none"
+                />
+              ) : (
+                <span 
+                  onClick={() => setIsEditing(true)}
+                  className="text-2xl font-bold text-blue-600 dark:text-blue-400 cursor-pointer hover:text-blue-700 dark:hover:text-blue-300 transition-colors px-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded"
+                  title="Click to edit page number"
+                >
+                  {currentPage}
+                </span>
+              )}
               <span className="text-gray-500 dark:text-gray-400">
                 /
               </span>
