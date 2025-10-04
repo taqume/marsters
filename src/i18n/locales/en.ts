@@ -7,7 +7,6 @@ export default {
       favorites: 'Favorites',
     },
     difficulty: {
-      original: 'Original',
       beginner: 'Beginner',
       intermediate: 'Intermediate',
       advanced: 'Advanced',
@@ -20,6 +19,7 @@ export default {
       backToLibrary: 'Back to Library',
       addToFavorites: 'Add to Favorites',
       removeFromFavorites: 'Remove from Favorites',
+      original: 'Original',
     },
     statistics: {
       title: 'Reading Statistics',
@@ -32,7 +32,6 @@ export default {
       minutes: 'minutes',
       hours: 'hours',
       readBy: {
-        original: 'Read Original',
         beginner: 'Read Beginner',
         intermediate: 'Read Intermediate',
         advanced: 'Read Advanced',

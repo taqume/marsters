@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Heart, HeartOff } from 'lucide-react';
+import { ArrowLeft, Heart, HeartOff, ExternalLink } from 'lucide-react';
 import { Article, DifficultyLevel, Language } from '@models/Article';
 import { articleService } from '@services/ArticleService';
 import { useSettingsStore } from '@stores/settingsStore';
@@ -24,8 +24,8 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
   const { isFavorite, addFavorite, removeFavorite } = useFavoritesStore();
   const { startReading } = useReadingHistoryStore();
   
-  const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel>(DifficultyLevel.ORIGINAL);
-  const [isReading, setIsReading] = useState(true);
+  const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel>(DifficultyLevel.BEGINNER);
+  const isReading = true;
 
   // Track reading time
   useReadingTimer(article.id, isReading);
@@ -84,7 +84,6 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
                 onChange={(e) => setSelectedLevel(e.target.value as DifficultyLevel)}
                 className="px-4 py-2 bg-gray-100 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <option value={DifficultyLevel.ORIGINAL}>{t('difficulty.original')}</option>
                 <option value={DifficultyLevel.BEGINNER}>{t('difficulty.beginner')}</option>
                 <option value={DifficultyLevel.INTERMEDIATE}>{t('difficulty.intermediate')}</option>
                 <option value={DifficultyLevel.ADVANCED}>{t('difficulty.advanced')}</option>
@@ -124,6 +123,19 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
               <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
                 {content}
               </p>
+            </div>
+
+            {/* Original Article Link */}
+            <div className="mt-8 flex justify-end">
+              <a
+                href="https://www.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors shadow-md hover:shadow-lg"
+              >
+                <span className="font-medium">{t('article.original')}</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </motion.div>
