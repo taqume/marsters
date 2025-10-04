@@ -152,39 +152,176 @@ export const BookReader: React.FC<BookReaderProps> = ({
         exit={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
         onClick={handleClose}
       >
-        {/* Main Book Container */}
-        <motion.div
-          ref={bookRef}
-          className="relative"
-          style={{ perspective: '3000px' }}
-          initial={initialPosition ? {
-            x: initialPosition.x - window.innerWidth / 2,
-            y: initialPosition.y - window.innerHeight / 2,
-            scale: 0.2,
-            rotateY: 0,
-          } : {
-            scale: 0.2,
-            rotateY: 0,
-          }}
-          animate={isAnimatingClose ? (initialPosition ? {
-            x: initialPosition.x - window.innerWidth / 2,
-            y: initialPosition.y - window.innerHeight / 2,
-            scale: 0.2,
-            rotateY: 0,
-            transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
-          } : {
-            scale: 0,
-            rotateY: 0,
-            transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
-          }) : {
-            x: 0,
-            y: 0,
-            scale: 1,
-            rotateY: 0,
-            transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
+        {/* Controls Container - Centered with Fixed Width */}
+        <div className="relative w-[1000px] h-[600px]">
+          {/* Difficulty Selector - Top Center */}
+          <motion.div
+            className="absolute -top-14 left-0 right-0 mx-auto w-fit flex items-center gap-1 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-neutral-800 dark:to-neutral-900 border-2 border-amber-800/30 dark:border-neutral-600 rounded-lg shadow-lg p-1 z-50"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+          >
+            <button
+              onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.BEGINNER); }}
+              className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
+                selectedLevel === DifficultyLevel.BEGINNER
+                  ? 'bg-amber-500 text-white shadow-md'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
+              }`}
+            >
+              Beginner
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.INTERMEDIATE); }}
+              className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
+                selectedLevel === DifficultyLevel.INTERMEDIATE
+                  ? 'bg-orange-500 text-white shadow-md'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
+              }`}
+            >
+              Intermediate
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.ADVANCED); }}
+              className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
+                selectedLevel === DifficultyLevel.ADVANCED
+                  ? 'bg-red-500 text-white shadow-md'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
+              }`}
+            >
+              Advanced
+            </button>
+          </motion.div>
+
+          {/* Vertical Progress Bar - Left Side */}
+          <motion.div
+            className="absolute top-0 -left-[15px] flex flex-col items-center gap-2 h-[600px] z-50"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.3 }}
+          >
+            <span className="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
+              {readingProgress}%
+            </span>
+            <div className="w-2 flex-1 bg-amber-200/50 dark:bg-neutral-700/50 rounded-full overflow-hidden shadow-inner relative">
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-amber-500 via-orange-500 to-amber-600 rounded-full shadow-lg"
+                initial={{ height: 0 }}
+                animate={{ height: `${readingProgress}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+          </motion.div>
+
+          {/* Right Side Buttons */}
+          <motion.div
+            className="absolute top-0 -right-[15px] flex flex-col gap-2 z-50"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.2 }}
+          >
+            <button
+              onClick={(e) => { e.stopPropagation(); handleClose(); }}
+              className="w-12 h-12 bg-red-500/90 hover:bg-red-600 border-2 border-red-700 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+              title="Close"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
+
+            {article.url && (
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="w-12 h-12 bg-blue-500/90 hover:bg-blue-600 border-2 border-blue-700 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+                title="Open Original Article"
+              >
+                <ExternalLink className="w-5 h-5 text-white" />
+              </a>
+            )}
+
+            <button
+              onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}
+              className="w-12 h-12 bg-amber-100 dark:bg-neutral-800 border-2 border-amber-800/30 dark:border-neutral-600 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+              title={isFavorite(article.id) ? "Remove from Favorites" : "Add to Favorites"}
+            >
+              {isFavorite(article.id) ? (
+                <Heart className="w-5 h-5 text-red-500 fill-red-500" />
+              ) : (
+                <Heart className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              )}
+            </button>
+          </motion.div>
+
+          {/* Page Navigation - Bottom Center */}
+          <motion.div
+            className="absolute -bottom-[53px] left-10 right-3 mx-auto w-fit z-50"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+          >
+            <div className="flex items-center gap-1 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-neutral-800 dark:to-neutral-900 border-2 border-amber-800/30 dark:border-neutral-600 rounded-lg shadow-lg p-1">
+              <button
+                onClick={(e) => { e.stopPropagation(); handlePrevPage(); }}
+                disabled={currentPage === 1 || isFlipping}
+                className="px-3 py-2 rounded-md hover:bg-amber-200 dark:hover:bg-neutral-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center"
+                title="Previous Page"
+              >
+                <ChevronLeft className="w-4 h-4 text-gray-800 dark:text-amber-100" />
+              </button>
+
+              <div className="px-4 py-2 flex items-center gap-2">
+                <BookOpen className="w-3.5 h-3.5 text-amber-800 dark:text-amber-200" />
+                <span className="text-xs font-semibold text-gray-800 dark:text-amber-50 min-w-[50px] text-center">
+                  {currentPage} / {totalPages}
+                </span>
+              </div>
+
+              <button
+                onClick={(e) => { e.stopPropagation(); handleNextPage(); }}
+                disabled={currentPage === totalPages || isFlipping}
+                className="px-3 py-2 rounded-md hover:bg-amber-200 dark:hover:bg-neutral-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center"
+                title="Next Page"
+              >
+                <ChevronRight className="w-4 h-4 text-gray-800 dark:text-amber-100" />
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Main Book Container */}
+          <motion.div
+            ref={bookRef}
+            className="relative"
+            style={{ perspective: '3000px' }}
+            initial={initialPosition ? {
+              x: initialPosition.x - window.innerWidth / 2,
+              y: initialPosition.y - window.innerHeight / 2,
+              scale: 0.2,
+              rotateY: 0,
+            } : {
+              scale: 0.2,
+              rotateY: 0,
+            }}
+            animate={isAnimatingClose ? (initialPosition ? {
+              x: initialPosition.x - window.innerWidth / 2,
+              y: initialPosition.y - window.innerHeight / 2,
+              scale: 0.2,
+              rotateY: 0,
+              transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
+            } : {
+              scale: 0,
+              rotateY: 0,
+              transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
+            }) : {
+              x: 0,
+              y: 0,
+              scale: 1,
+              rotateY: 0,
+              transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
           {/* Book Itself - Smaller Size */}
           <div className="relative w-[1000px] h-[600px] flex items-center justify-center">
             
@@ -342,151 +479,9 @@ export const BookReader: React.FC<BookReaderProps> = ({
               </motion.div>
             </motion.div>
 
-            {/* Difficulty Selector - Top Left (Modern Segmented Control) */}
-            <motion.div
-              className="absolute -top-14 left-0 flex items-center gap-1 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-neutral-800 dark:to-neutral-900 border-2 border-amber-800/30 dark:border-neutral-600 rounded-lg shadow-lg p-1"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2 }}
-            >
-              <button
-                onClick={() => setSelectedLevel(DifficultyLevel.BEGINNER)}
-                className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
-                  selectedLevel === DifficultyLevel.BEGINNER
-                    ? 'bg-amber-500 text-white shadow-md'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
-                }`}
-              >
-                Beginner
-              </button>
-              <button
-                onClick={() => setSelectedLevel(DifficultyLevel.INTERMEDIATE)}
-                className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
-                  selectedLevel === DifficultyLevel.INTERMEDIATE
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
-                }`}
-              >
-                Intermediate
-              </button>
-              <button
-                onClick={() => setSelectedLevel(DifficultyLevel.ADVANCED)}
-                className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
-                  selectedLevel === DifficultyLevel.ADVANCED
-                    ? 'bg-red-500 text-white shadow-md'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
-                }`}
-              >
-                Advanced
-              </button>
-            </motion.div>
-
-            {/* Vertical Progress Bar - Left Side */}
-            <motion.div
-              className="absolute top-0 left-0 -translate-x-[60px] flex flex-col items-center gap-2 h-[600px]"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.3 }}
-            >
-              {/* Progress Text */}
-              <span className="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-                {readingProgress}%
-              </span>
-              
-              {/* Vertical Progress Bar */}
-              <div className="w-2 flex-1 bg-amber-200/50 dark:bg-neutral-700/50 rounded-full overflow-hidden shadow-inner relative">
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-amber-500 via-orange-500 to-amber-600 rounded-full shadow-lg"
-                  initial={{ height: 0 }}
-                  animate={{ height: `${readingProgress}%` }}
-                  transition={{ duration: 0.5 }}
-                />
-              </div>
-            </motion.div>
-
-            {/* Floating Controls - Right Side (Square Buttons) */}
-            <motion.div
-              className="absolute top-0 right-0 translate-x-[calc(100%+30px)] flex flex-col gap-2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.2 }}
-            >
-              {/* Close Button */}
-              <button
-                onClick={handleClose}
-                className="w-12 h-12 bg-red-500/90 hover:bg-red-600 border-2 border-red-700 rounded-md shadow-lg hover:shadow-xl transition-all group flex items-center justify-center"
-                title="Close"
-              >
-                <X className="w-6 h-6 text-white" />
-              </button>
-
-              {/* External Link Button */}
-              {article.url && (
-                <a
-                  href={article.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-blue-500/90 hover:bg-blue-600 border-2 border-blue-700 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
-                  title="Open Original Article"
-                >
-                  <ExternalLink className="w-5 h-5 text-white" />
-                </a>
-              )}
-
-              {/* Favorite Button */}
-              <button
-                onClick={toggleFavorite}
-                className="w-12 h-12 bg-amber-100 dark:bg-neutral-800 border-2 border-amber-800/30 dark:border-neutral-600 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
-                title={isFavorite(article.id) ? "Remove from Favorites" : "Add to Favorites"}
-              >
-                {isFavorite(article.id) ? (
-                  <Heart className="w-5 h-5 text-red-500 fill-red-500" />
-                ) : (
-                  <Heart className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                )}
-              </button>
-            </motion.div>
-
-            {/* Page Navigation - Bottom Center (Slim Design) */}
-            <motion.div
-              className="absolute top-[610px] left-[500px]"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2 }}
-            >
-              {/* Navigation Controls */}
-              <div className="flex items-center gap-3 bg-gradient-to-br from-amber-100 to-orange-100 dark:from-neutral-800 dark:to-neutral-900 border-2 border-amber-800/30 dark:border-neutral-600 rounded-full shadow-xl px-4 py-2">
-                {/* Previous Button */}
-                <button
-                  onClick={handlePrevPage}
-                  disabled={currentPage === 1 || isFlipping}
-                  className="p-1.5 rounded-full hover:bg-amber-200 dark:hover:bg-neutral-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                  title="Previous Page"
-                >
-                  <ChevronLeft className="w-4 h-4 text-gray-800 dark:text-amber-100" />
-                </button>
-
-                {/* Page Counter */}
-                <div className="flex items-center gap-2 px-2">
-                  <BookOpen className="w-3.5 h-3.5 text-amber-800 dark:text-amber-200" />
-                  <span className="text-xs font-semibold text-gray-800 dark:text-amber-50 min-w-[50px] text-center">
-                    {currentPage} / {totalPages}
-                  </span>
-                </div>
-
-                {/* Next Button */}
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages || isFlipping}
-                  className="p-1.5 rounded-full hover:bg-amber-200 dark:hover:bg-neutral-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                  title="Next Page"
-                >
-                  <ChevronRight className="w-4 h-4 text-gray-800 dark:text-amber-100" />
-                </button>
-              </div>
-            </motion.div>
           </div>
         </motion.div>
+        </div>
       </motion.div>
     </AnimatePresence>
   );
