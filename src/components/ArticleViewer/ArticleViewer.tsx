@@ -27,6 +27,8 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
   const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel>(DifficultyLevel.BEGINNER);
   const [currentPage, setCurrentPage] = useState(1);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isPageTurning, setIsPageTurning] = useState(false);
+  const [pageDirection, setPageDirection] = useState<'next' | 'prev' | null>(null);
   const isReading = true;
 
   // Track reading time
@@ -40,8 +42,8 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
   const content = articleService.getLocalizedContent(article, language, selectedLevel);
   const title = articleService.getLocalizedTitle(article, language);
   
-  // Split content into pages (approximately 500 words per page)
-  const wordsPerPage = 500;
+  // Split content into pages (approximately 300 words per page for better readability)
+  const wordsPerPage = 300;
   const words = content.split(' ');
   const totalPages = Math.ceil(words.length / wordsPerPage);
   
@@ -50,6 +52,28 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
     const endIndex = startIndex + wordsPerPage;
     return words.slice(startIndex, endIndex).join(' ');
   }, [content, currentPage, wordsPerPage]);
+
+  // Split current page content into left and right page content
+  // Only split if content is long enough for two pages
+  const leftPageContent = useMemo(() => {
+    const pageWords = currentPageContent.split(' ');
+    // If content is short (less than 150 words), show all on left page
+    if (pageWords.length < 150) {
+      return currentPageContent;
+    }
+    const midPoint = Math.floor(pageWords.length / 2);
+    return pageWords.slice(0, midPoint).join(' ');
+  }, [currentPageContent]);
+
+  const rightPageContent = useMemo(() => {
+    const pageWords = currentPageContent.split(' ');
+    // If content is short (less than 150 words), show nothing on right page
+    if (pageWords.length < 150) {
+      return '';
+    }
+    const midPoint = Math.floor(pageWords.length / 2);
+    return pageWords.slice(midPoint).join(' ');
+  }, [currentPageContent]);
 
   // Reset to first page when level changes
   useEffect(() => {
@@ -63,15 +87,25 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
     setScrollProgress(progress);
   };
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
+  const handlePreviousPage = async () => {
+    if (currentPage > 1 && !isPageTurning) {
+      setPageDirection('prev');
+      setIsPageTurning(true);
+      await new Promise(resolve => setTimeout(resolve, 600));
       setCurrentPage(currentPage - 1);
+      setIsPageTurning(false);
+      setPageDirection(null);
     }
   };
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
+  const handleNextPage = async () => {
+    if (currentPage < totalPages && !isPageTurning) {
+      setPageDirection('next');
+      setIsPageTurning(true);
+      await new Promise(resolve => setTimeout(resolve, 600));
       setCurrentPage(currentPage + 1);
+      setIsPageTurning(false);
+      setPageDirection(null);
     }
   };
 
@@ -115,264 +149,325 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
 
       {/* Encyclopedia Book */}
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        initial={{ 
+          scale: 0.3, 
+          opacity: 0, 
+          rotateY: -180,
+          x: '100%',
+          filter: 'blur(10px)'
+        }}
+        animate={{ 
+          scale: 1, 
+          opacity: 1, 
+          rotateY: 0,
+          x: 0,
+          filter: 'blur(0px)'
+        }}
+        exit={{ 
+          scale: 0.3, 
+          opacity: 0, 
+          rotateY: 180,
+          x: '100%',
+          filter: 'blur(10px)'
+        }}
+        transition={{ 
+          type: 'spring', 
+          damping: 20, 
+          stiffness: 200,
+          duration: 0.8
+        }}
         className="fixed inset-4 z-50 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #fef7ed 0%, #fed7aa 50%, #fdba74 100%)',
           borderRadius: '20px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+          transformStyle: 'preserve-3d'
         }}
       >
-        {/* Encyclopedia Header */}
-        <div className="relative bg-gradient-to-r from-amber-100 to-orange-100 dark:from-gray-800 dark:to-gray-700 border-b-2 border-amber-300 dark:border-gray-600 p-6">
+        {/* Compact Book Header */}
+        <div className="relative bg-gradient-to-r from-amber-100 to-orange-100 dark:from-gray-800 dark:to-gray-700 border-b-2 border-amber-300 dark:border-gray-600 p-3">
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/80 dark:bg-gray-700/80 hover:bg-white dark:hover:bg-gray-600 transition-all hover:rotate-90 duration-300 shadow-lg"
+            className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 dark:bg-gray-700/80 hover:bg-white dark:hover:bg-gray-600 transition-all hover:rotate-90 duration-300 shadow-lg"
             aria-label="Close"
           >
-            <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+            <X className="w-4 h-4 text-gray-700 dark:text-gray-300" />
           </button>
 
-          {/* Encyclopedia Title */}
-          <div className="flex items-center justify-center mb-4">
+          {/* Compact Title Row */}
+          <div className="flex items-center justify-between pr-12">
             <div className="flex items-center space-x-3">
-              <div className="p-3 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl shadow-lg">
-                <Book className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-center">
-                <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">
-                  Bilim Ansiklopedisi
+              <motion.div 
+                className="p-2 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg shadow-lg"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.3, type: 'spring', stiffness: 400 }}
+              >
+                <Book className="w-5 h-5 text-white" />
+              </motion.div>
+              <div>
+                <h1 className="text-lg font-bold text-gray-800 dark:text-white">
+                  {title}
                 </h1>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  {displayCategory}
-                </div>
-              </div>
+                <div className="flex items-center space-x-4 text-xs text-gray-600 dark:text-gray-400">
+                  <span className="flex items-center space-x-1">
+                    <User className="w-3 h-3" />
+                    <span>{displayAuthor}</span>
+                  </span>
+                  <span className="flex items-center space-x-1">
+                    <Calendar className="w-3 h-3" />
+                    <span>{article.date}</span>
+                  </span>
+                  <span 
+                    className="px-2 py-0.5 rounded-full text-xs font-bold text-white"
+              style={{ backgroundColor: article.coverColor }}
+            >
+              {displayCategory}
+                  </span>
+            </div>
+          </div>
+            </div>
+
             </div>
           </div>
 
-          {/* Article Title */}
-          <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4 leading-tight">
-            {title}
-          </h2>
-
-          {/* Article Metadata */}
-          <div className="flex justify-center items-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
-            <div className="flex items-center space-x-2">
-              <User className="w-4 h-4" />
-              <span className="font-medium">{displayAuthor}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4" />
-              <span>{article.date}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4" />
-              <span>{Math.ceil(words.length / 200)} dk okuma</span>
-            </div>
-          </div>
-
-          {/* Page Controls */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center mt-4 space-x-4">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-                className={`p-2 rounded-full transition-all duration-300 ${
-                  currentPage === 1
-                    ? 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed'
-                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-gray-600 shadow-lg hover:shadow-xl'
-                }`}
-                aria-label="Previous page"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              
-              <div className="flex items-center space-x-2 bg-white dark:bg-gray-700 px-4 py-2 rounded-full shadow-lg">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Sayfa {currentPage} / {totalPages}
-                </span>
-              </div>
-              
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className={`p-2 rounded-full transition-all duration-300 ${
-                  currentPage === totalPages
-                    ? 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed'
-                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-gray-600 shadow-lg hover:shadow-xl'
-                }`}
-                aria-label="Next page"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Difficulty Selector & Actions */}
-        <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-amber-200 dark:border-gray-600 p-4">
+        {/* Compact Difficulty Selector */}
+        <motion.div 
+          className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-amber-200 dark:border-gray-600 p-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
           <div className="flex items-center justify-between">
             {/* Difficulty Selector */}
-            <div className="flex items-center space-x-3">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Zorluk Seviyesi:</span>
-              <div className="flex space-x-2">
-                {[DifficultyLevel.BEGINNER, DifficultyLevel.INTERMEDIATE, DifficultyLevel.ADVANCED].map((level) => (
-                  <button
+            <motion.div 
+              className="flex items-center space-x-2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Seviye:</span>
+              <div className="flex space-x-1">
+                {[DifficultyLevel.BEGINNER, DifficultyLevel.INTERMEDIATE, DifficultyLevel.ADVANCED].map((level, index) => (
+                  <motion.button
                     key={level}
                     onClick={() => setSelectedLevel(level)}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     className={`
-                      px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300
+                      px-2 py-1 rounded-full text-xs font-semibold transition-all duration-300
                       ${selectedLevel === level
-                        ? `bg-gradient-to-r ${levelColors[level]} text-white shadow-lg scale-105`
-                        : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-amber-100 dark:hover:bg-gray-600 shadow-md'
+                        ? `bg-gradient-to-r ${levelColors[level]} text-white shadow-md scale-105`
+                        : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-amber-100 dark:hover:bg-gray-600 shadow-sm'
                       }
                     `}
                   >
                     <span className="mr-1">{levelIcons[level]}</span>
                     {t(`difficulty.${level}`)}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
-            {/* Favorite Button */}
-            <button
-              onClick={handleFavoriteToggle}
-              className="group p-3 rounded-full bg-gradient-to-br from-pink-100 to-red-100 dark:from-pink-900/30 dark:to-red-900/30 hover:from-pink-200 hover:to-red-200 dark:hover:from-pink-800/40 dark:hover:to-red-800/40 transition-all duration-300 shadow-md hover:shadow-lg"
-              aria-label="Toggle favorite"
-            >
-              {isFavorite(article.id) ? (
-                <Heart className="w-5 h-5 text-red-500 fill-red-500 group-hover:scale-110 transition-transform" />
-              ) : (
-                <HeartOff className="w-5 h-5 text-gray-500 group-hover:text-red-500 group-hover:scale-110 transition-all" />
-              )}
-            </button>
+              {/* Favorite Button */}
+            <motion.button
+                onClick={handleFavoriteToggle}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.0 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="group p-2 rounded-full bg-gradient-to-br from-pink-100 to-red-100 dark:from-pink-900/30 dark:to-red-900/30 hover:from-pink-200 hover:to-red-200 dark:hover:from-pink-800/40 dark:hover:to-red-800/40 transition-all duration-300 shadow-sm hover:shadow-md"
+                aria-label="Toggle favorite"
+              >
+                {isFavorite(article.id) ? (
+                <Heart className="w-4 h-4 text-red-500 fill-red-500 group-hover:scale-110 transition-transform" />
+                ) : (
+                <HeartOff className="w-4 h-4 text-gray-500 group-hover:text-red-500 group-hover:scale-110 transition-all" />
+                )}
+            </motion.button>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Encyclopedia Content Area */}
-        <div className="flex-1 overflow-hidden">
-          <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-0">
-            {/* Left Column */}
-            <div className="p-8 bg-gradient-to-br from-white/80 to-amber-50/80 dark:from-gray-800/80 dark:to-gray-700/80 border-r border-amber-200 dark:border-gray-600 overflow-y-auto">
+        {/* Book Pages Area */}
+        <motion.div 
+          className="flex-1 overflow-hidden"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1 }}
+        >
+          <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-0 relative">
+            {/* Left Page */}
+            <motion.div 
+              className="relative p-8 bg-gradient-to-br from-white to-amber-50/50 dark:from-gray-800 dark:to-gray-700/50 border-r border-amber-300 dark:border-gray-600 overflow-y-auto"
+              initial={{ opacity: 0, x: -100, rotateY: -15 }}
+              animate={{ 
+                opacity: 1, 
+                x: 0, 
+                rotateY: pageDirection === 'next' ? -25 : pageDirection === 'prev' ? 0 : 0
+              }}
+              transition={{ 
+                delay: 1.2, 
+                type: 'spring', 
+                stiffness: 200,
+                duration: pageDirection ? 0.6 : 0.8
+              }}
+              style={{
+                background: 'linear-gradient(135deg, #ffffff 0%, #fef7ed 50%, #fef3c7 100%)',
+                boxShadow: 'inset -2px 0 10px rgba(0,0,0,0.1)',
+                transformStyle: 'preserve-3d'
+              }}
+            >
+              {/* Book Spine Shadow */}
+              <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-r from-transparent to-amber-200/30 dark:to-gray-600/30" />
+              
               <div className="max-w-lg mx-auto">
-                {/* Column Header */}
-                <div className="flex items-center justify-center mb-6">
-                  <div className="p-3 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl shadow-lg">
-                    <BookOpen className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                
-                {/* Content */}
-                <div className="prose prose-lg dark:prose-invert max-w-none">
-                  <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap font-serif">
-                    {currentPageContent}
+                {/* Page Content */}
+                <motion.div 
+                  className="prose prose-lg dark:prose-invert max-w-none"
+                  key={`left-${currentPage}`}
+                  initial={{ 
+                    opacity: pageDirection ? 0 : 1, 
+                    x: pageDirection === 'next' ? -100 : pageDirection === 'prev' ? 100 : 0,
+                    rotateY: pageDirection === 'next' ? -15 : pageDirection === 'prev' ? 15 : 0
+                  }}
+                  animate={{ 
+                    opacity: 1, 
+                    x: 0,
+                    rotateY: 0
+                  }}
+                  transition={{ 
+                    type: 'spring', 
+                    stiffness: 300, 
+                    damping: 25,
+                    duration: pageDirection ? 0.8 : 0.6
+                  }}
+                >
+                  <p className="text-base leading-relaxed whitespace-pre-wrap font-serif" style={{ color: 'black' }}>
+                    {leftPageContent}
                   </p>
-                </div>
+                </motion.div>
                 
-                {/* Page Indicator for Left Column */}
+                {/* Page Controls - Left */}
                 {totalPages > 1 && (
-                  <div className="mt-8 pt-4 border-t border-amber-200 dark:border-gray-600 text-center">
-                    <div className="inline-flex items-center space-x-2 bg-white dark:bg-gray-700 px-4 py-2 rounded-full shadow-md">
-                      <span className="text-xs text-gray-600 dark:text-gray-400">
-                        {currentPage} / {totalPages}
-                      </span>
-                    </div>
+                  <div className="absolute top-1/2 -left-4 transform -translate-y-1/2">
+                    <motion.button
+                      onClick={handlePreviousPage}
+                      disabled={currentPage === 1 || isPageTurning}
+                      whileHover={currentPage > 1 && !isPageTurning ? { scale: 1.1, x: 5 } : {}}
+                      whileTap={currentPage > 1 && !isPageTurning ? { scale: 0.9 } : {}}
+                      className={`p-2 rounded-full transition-all duration-300 ${
+                        currentPage === 1 || isPageTurning
+                          ? 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-gray-600 shadow-lg hover:shadow-xl'
+                      }`}
+                      aria-label="Previous page"
+                    >
+                      <ChevronLeft className={`w-5 h-5 ${isPageTurning && pageDirection === 'prev' ? 'animate-pulse' : ''}`} />
+                    </motion.button>
                   </div>
                 )}
+                
+                {/* Page Number */}
+                <div className="absolute bottom-4 left-8 text-sm text-gray-700 dark:text-gray-300 font-serif">
+                  {currentPage * 2 - 1}
+                </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Right Column - Additional Information */}
-            <div className="p-8 bg-gradient-to-br from-amber-50/80 to-orange-50/80 dark:from-gray-700/80 dark:to-gray-600/80 overflow-y-auto">
+            {/* Right Page */}
+            <motion.div 
+              className="relative p-8 bg-gradient-to-br from-amber-50/50 to-white dark:from-gray-700/50 dark:to-gray-800 overflow-y-auto"
+              initial={{ opacity: 0, x: 100, rotateY: 15 }}
+              animate={{ 
+                opacity: 1, 
+                x: 0, 
+                rotateY: pageDirection === 'prev' ? 25 : pageDirection === 'next' ? 0 : 0
+              }}
+              transition={{ 
+                delay: 1.3, 
+                type: 'spring', 
+                stiffness: 200,
+                duration: pageDirection ? 0.6 : 0.8
+              }}
+              style={{
+                background: 'linear-gradient(135deg, #fef3c7 0%, #fef7ed 50%, #ffffff 100%)',
+                boxShadow: 'inset 2px 0 10px rgba(0,0,0,0.1)',
+                transformStyle: 'preserve-3d'
+              }}
+            >
+              {/* Book Spine Shadow */}
+              <div className="absolute right-0 top-0 bottom-0 w-2 bg-gradient-to-l from-transparent to-amber-200/30 dark:to-gray-600/30" />
+              
               <div className="max-w-lg mx-auto">
-                {/* Column Header */}
-                <div className="flex items-center justify-center mb-6">
-                  <div className="p-3 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl shadow-lg">
-                    <Sparkles className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-
-                {/* Article Info Box */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-amber-200 dark:border-gray-600 mb-6">
-                  <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
-                    <User className="w-5 h-5 mr-2 text-amber-600" />
-                    Makale Bilgileri
-                  </h3>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Yazar:</span>
-                      <span className="font-medium text-gray-800 dark:text-white">{displayAuthor}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Tarih:</span>
-                      <span className="font-medium text-gray-800 dark:text-white">{article.date}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Kategori:</span>
-                      <span 
-                        className="px-2 py-1 rounded-full text-xs font-bold text-white"
-                        style={{ backgroundColor: article.coverColor }}
-                      >
-                        {displayCategory}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Kelime Sayısı:</span>
-                      <span className="font-medium text-gray-800 dark:text-white">{words.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Tahmini Süre:</span>
-                      <span className="font-medium text-gray-800 dark:text-white">
-                        {Math.ceil(words.length / 200)} dakika
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Difficulty Level Info */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-amber-200 dark:border-gray-600 mb-6">
-                  <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
-                    <span className="mr-2">{levelIcons[selectedLevel]}</span>
-                    Zorluk Seviyesi
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {selectedLevel === DifficultyLevel.BEGINNER && "Bu seviye temel bilgileri içerir ve herkesin anlayabileceği şekilde yazılmıştır."}
-                    {selectedLevel === DifficultyLevel.INTERMEDIATE && "Orta seviye bilgi gerektiren bu içerik, temel bilimsel kavramları bilenler için uygundur."}
-                    {selectedLevel === DifficultyLevel.ADVANCED && "İleri seviye bilimsel terminoloji ve kavramları içeren uzman düzeyinde içerik."}
-                  </p>
-                </div>
-
-                {/* Original Article Link */}
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-200/50 dark:border-purple-700/50">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-3" />
-                    <h3 className="font-bold text-gray-900 dark:text-white mb-2">
-                      Orijinal Araştırma
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      Tam bilimsel makaleyi keşfedin
+                {/* Page Content */}
+                <motion.div 
+                  className="prose prose-lg dark:prose-invert max-w-none"
+                  key={`right-${currentPage}`}
+                  initial={{ 
+                    opacity: pageDirection ? 0 : 1, 
+                    x: pageDirection === 'prev' ? -100 : pageDirection === 'next' ? 100 : 0,
+                    rotateY: pageDirection === 'prev' ? -15 : pageDirection === 'next' ? 15 : 0
+                  }}
+                  animate={{ 
+                    opacity: 1, 
+                    x: 0,
+                    rotateY: 0
+                  }}
+                  transition={{ 
+                    type: 'spring', 
+                    stiffness: 300, 
+                    damping: 25,
+                    duration: pageDirection ? 0.8 : 0.6
+                  }}
+                >
+                  {/* Main Content */}
+                  {rightPageContent ? (
+                    <p className="text-base leading-relaxed whitespace-pre-wrap font-serif" style={{ color: 'black' }}>
+                      {rightPageContent}
                     </p>
-                    <a
-                      href="https://www.google.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-full transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-sm"
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-gray-400 dark:text-gray-500 text-sm font-serif italic">
+                        Bu sayfa için içerik bulunmuyor
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+                
+                {/* Page Controls - Right */}
+                {totalPages > 1 && (
+                  <div className="absolute top-1/2 -right-4 transform -translate-y-1/2">
+                    <motion.button
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages || isPageTurning}
+                      whileHover={currentPage < totalPages && !isPageTurning ? { scale: 1.1, x: -5 } : {}}
+                      whileTap={currentPage < totalPages && !isPageTurning ? { scale: 0.9 } : {}}
+                      className={`p-2 rounded-full transition-all duration-300 ${
+                        currentPage === totalPages || isPageTurning
+                          ? 'bg-gray-200 dark:bg-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-gray-600 shadow-lg hover:shadow-xl'
+                      }`}
+                      aria-label="Next page"
                     >
-                      <span>{t('article.original')}</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
+                      <ChevronRight className={`w-5 h-5 ${isPageTurning && pageDirection === 'next' ? 'animate-pulse' : ''}`} />
+                    </motion.button>
                   </div>
+                )}
+                
+                {/* Page Number */}
+                <div className="absolute bottom-4 right-8 text-sm text-gray-700 dark:text-gray-300 font-serif">
+                  {currentPage * 2}
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </AnimatePresence>
   );

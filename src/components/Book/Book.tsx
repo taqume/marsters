@@ -1,5 +1,6 @@
 import { Article } from '@models/Article';
 import { Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface BookProps {
   article: Article;
@@ -15,13 +16,30 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
   const glowColor = article.coverColor + '40';
 
   return (
-    <div
+    <motion.div
       onClick={onClick}
       className="book-container group cursor-pointer flex-shrink-0 relative"
       style={{
         perspective: '1500px',
         width: '150px',
         height: '220px',
+      }}
+      initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
+      animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+      transition={{ 
+        type: 'spring', 
+        stiffness: 300, 
+        damping: 25,
+        duration: 0.6
+      }}
+      whileHover={{ 
+        scale: 1.05, 
+        rotateY: -15,
+        transition: { duration: 0.3 }
+      }}
+      whileTap={{ 
+        scale: 0.95,
+        transition: { duration: 0.1 }
       }}
     >
       {/* Glow effect on hover */}
@@ -146,7 +164,12 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
       </div>
 
       {/* Enhanced Hover Tooltip */}
-      <div className="absolute -bottom-24 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-2 z-20 pointer-events-none">
+      <motion.div 
+        className="absolute -bottom-24 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-2 z-20 pointer-events-none"
+        initial={{ opacity: 0, y: 10, scale: 0.8 }}
+        whileHover={{ opacity: 1, y: -10, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-gray-700 backdrop-blur-sm">
           <div className="font-bold text-sm mb-1">{article.category}</div>
           <div className="text-gray-300 text-xs flex items-center space-x-1">
@@ -156,7 +179,7 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
           {/* Arrow pointing up */}
           <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-b-4 border-b-gray-900" />
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
