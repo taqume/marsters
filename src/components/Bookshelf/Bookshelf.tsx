@@ -9,8 +9,8 @@ interface BookshelfProps {
 }
 
 /**
- * Modern Bookshelf Component with Enhanced Visual Design
- * Features: Gradient backgrounds, ambient lighting, depth effects
+ * NASA Space-Themed Bookshelf Component
+ * Space station shelf system with holographic effects
  */
 export const Bookshelf: React.FC<BookshelfProps> = ({ 
   articles, 
@@ -28,27 +28,17 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
     <div className="w-full min-h-[700px] relative">
       {/* Content Container */}
       <div className="relative z-10 py-10 px-6">
-        {/* Shelves */}
+        {/* Shelves - Space Station Modules */}
         <div className="space-y-20">
           {shelves.map((shelfBooks, shelfIndex) => (
             <div key={shelfIndex} className="shelf-container relative">
-              {/* Modern Shelf Board */}
-              <div className="shelf-board absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-b from-gray-300 via-gray-400 to-gray-500 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 rounded-lg shadow-2xl">
-                {/* Glass effect on top */}
-                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+              {/* Space Station Shelf Board - Clean Glassmorphism */}
+              <div className="shelf-board absolute bottom-0 left-0 right-0 h-4 backdrop-blur-md bg-gradient-to-b from-blue-300/20 via-blue-400/15 to-blue-500/20 dark:from-blue-700/25 dark:via-blue-800/20 dark:to-blue-900/25 rounded-lg shadow-xl border-t border-blue-200/40 dark:border-blue-400/30">
+                {/* Glossy top edge */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-blue-300/50 to-transparent" />
                 
-                {/* Metallic shimmer */}
-                <div 
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.4) 60%, transparent 100%)',
-                    backgroundSize: '200% 100%',
-                    animation: 'shimmer 3s infinite',
-                  }}
-                />
-
-                {/* Depth shadow */}
-                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-b from-transparent to-black/30 rounded-b-lg" />
+                {/* Bottom depth */}
+                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-b from-transparent to-blue-500/30 dark:to-blue-400/20 rounded-b-lg" />
               </div>
 
               {/* Books Container */}
@@ -75,17 +65,18 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
           ))}
         </div>
 
-        {/* Empty State */}
+        {/* Empty State - Space Explorer */}
         {articles.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-6 shadow-2xl">
-              <div className="text-6xl">📚</div>
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-blue-600 rounded-full flex items-center justify-center mb-6 shadow-2xl relative">
+              <div className="absolute inset-0 bg-blue-500/30 rounded-full animate-ping" />
+              <div className="text-6xl relative z-10">�</div>
             </div>
             <h3 className="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-2">
-              No articles found
+              No mission files found
             </h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              Try adjusting your search filters
+            <p className="text-blue-600 dark:text-blue-400 font-mono text-sm">
+              Adjust scanner parameters
             </p>
           </div>
         )}

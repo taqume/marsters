@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '@stores/settingsStore';
 import { Language, ThemeMode } from '@models/Article';
-import { Sun, Moon, Globe, Sparkles } from 'lucide-react';
+import { Sun, Moon, Globe, Rocket } from 'lucide-react';
 import { SearchBar } from '@components/SearchBar/SearchBar';
 
 interface HeaderProps {
@@ -10,8 +10,8 @@ interface HeaderProps {
 }
 
 /**
- * Modern Header Component with Glassmorphism
- * Displays app branding, search, and controls with contemporary design
+ * NASA Space-Themed Header Component
+ * Mission control inspired design with space aesthetics
  */
 export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) => {
   const { t, i18n } = useTranslation();
@@ -24,65 +24,73 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-purple-200/50 dark:border-purple-800/30 shadow-lg transition-all">
-      {/* Gradient Accent Line */}
-      <div className="h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 animate-gradient-x" />
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl bg-white/70 dark:bg-gray-950/70 border-b border-blue-200/30 dark:border-blue-400/20 shadow-2xl transition-all">
+      {/* Space Mission Accent Line */}
+      <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 animate-gradient-x relative overflow-hidden">
+        {/* Scanning line effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" style={{
+          backgroundSize: '200% 100%',
+          animation: 'shimmer 3s linear infinite',
+        }} />
+      </div>
       
       <div className="container mx-auto px-6 py-3">
         {/* Single Row: Logo, SearchBar, Controls */}
         <div className="flex items-center justify-between gap-6">
-          {/* Logo/Title - Modern Branding */}
+          {/* NASA-Style Logo */}
           <div className="flex items-center space-x-4 group flex-shrink-0">
             <div className="relative">
-              {/* Glow effect behind logo */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity" />
-              {/* Logo */}
-              <div className="relative w-12 h-12 bg-gradient-to-br from-purple-600 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
-                <Sparkles className="w-6 h-6 text-white" strokeWidth={2.5} />
+              {/* Orbital glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl blur-xl opacity-40 group-hover:opacity-70 transition-opacity animate-pulse" />
+              {/* Logo Container */}
+              <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-2xl transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border border-blue-400/30">
+                <Rocket className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                {/* Sparkle effect */}
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-300 rounded-full animate-ping" />
               </div>
             </div>
             
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 dark:from-blue-400 dark:via-purple-400 dark:to-blue-500 bg-clip-text text-transparent drop-shadow-sm">
                 {t('header.title')}
               </h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Explore • Learn • Discover</p>
+              <p className="text-[10px] text-blue-600 dark:text-blue-400 font-mono tracking-wider uppercase">Explore • Learn • Discover</p>
             </div>
           </div>
 
           {/* Search Bar - Center */}
-          <div className="flex-1 max-w-2xl">
+          <div className="absolute left-1/2 -translate-x-1/2 w-[500px]">
             <SearchBar value={searchQuery} onChange={onSearchChange} />
           </div>
 
-          {/* Controls - Modern Pills */}
+          {/* Controls - Space Mission Style */}
           <div className="flex items-center space-x-2 flex-shrink-0">
             {/* Language Switcher */}
             <button
               onClick={handleLanguageChange}
-              className="group flex items-center justify-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 hover:from-purple-200 hover:to-pink-200 dark:hover:from-purple-800/40 dark:hover:to-pink-800/40 transition-all duration-300 border border-purple-200/50 dark:border-purple-700/50 shadow-md hover:shadow-lg w-20"
+              className="group flex items-center justify-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 hover:from-blue-200 hover:to-purple-200 dark:hover:from-blue-800/50 dark:hover:to-purple-800/50 transition-all duration-300 border border-blue-300/50 dark:border-blue-400/30 shadow-lg hover:shadow-xl hover:shadow-blue-500/20 w-20"
               aria-label="Change language"
             >
-              <Globe className="w-4 h-4 text-purple-600 dark:text-purple-400 group-hover:rotate-12 transition-transform" />
-              <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">
+              <Globe className="w-4 h-4 text-blue-600 dark:text-blue-400 group-hover:rotate-12 transition-transform" />
+              <span className="text-sm font-semibold text-blue-700 dark:text-blue-300 font-mono">
                 {language.toUpperCase()}
               </span>
             </button>
 
-            {/* Theme Toggle */}
+            {/* Theme Toggle - Day/Night Cycle */}
             <button
               onClick={toggleTheme}
-              className="group relative p-2.5 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-blue-900/30 dark:to-purple-900/30 hover:from-yellow-200 hover:to-orange-200 dark:hover:from-blue-800/40 dark:hover:to-purple-800/40 transition-all duration-300 border border-yellow-200/50 dark:border-blue-700/50 shadow-md hover:shadow-lg overflow-hidden"
+              className="group relative p-2.5 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-blue-900/40 dark:to-indigo-900/40 hover:from-yellow-200 hover:to-orange-200 dark:hover:from-blue-800/50 dark:hover:to-indigo-800/50 transition-all duration-300 border border-yellow-300/50 dark:border-blue-400/30 shadow-lg hover:shadow-xl hover:shadow-yellow-500/20 dark:hover:shadow-blue-500/20 overflow-hidden"
               aria-label="Toggle theme"
             >
               {theme === ThemeMode.LIGHT ? (
-                <Moon className="w-5 h-5 text-indigo-600 group-hover:rotate-12 transition-transform" />
+                <Moon className="w-5 h-5 text-indigo-700 group-hover:rotate-12 transition-transform relative z-10" />
               ) : (
-                <Sun className="w-5 h-5 text-yellow-400 group-hover:rotate-90 transition-transform" />
+                <Sun className="w-5 h-5 text-yellow-400 group-hover:rotate-90 transition-transform relative z-10" />
               )}
               
-              {/* Ripple effect */}
-              <div className="absolute inset-0 bg-white/20 dark:bg-white/10 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-500 rounded-full" />
+              {/* Pulse effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-300/20 to-orange-300/20 dark:from-blue-400/10 dark:to-purple-400/10 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700 rounded-full blur-sm" />
             </button>
           </div>
         </div>
