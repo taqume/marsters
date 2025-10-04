@@ -98,7 +98,8 @@ export class ArticleService {
       ? article.translations.tr.content
       : article.content;
 
-    return (content as any)[difficulty] || content.original;
+    // Return content based on difficulty level, fallback to beginner if not found
+    return (content as any)[difficulty] || content.beginner;
   }
 }
 
