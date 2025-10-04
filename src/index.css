@@ -7,23 +7,95 @@
     @apply transition-colors duration-300;
   }
   
-  /* Custom Scrollbar Styles */
+  /* Custom Scrollbar Styles with Modern Colors */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-slate-100 dark:bg-gray-700 rounded-full;
+    @apply bg-purple-50 dark:bg-gray-800 rounded-full;
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-400 dark:bg-slate-600 rounded-full hover:bg-slate-500 dark:hover:bg-slate-700;
+    @apply bg-gradient-to-b from-purple-400 to-pink-400 dark:from-purple-600 dark:to-pink-600 rounded-full hover:from-purple-500 hover:to-pink-500;
   }
   
-  /* Book hover 3D effect */
+  /* Book hover 3D effect with glow */
   .book-container:hover .book {
-    transform: rotateY(-10deg) translateZ(20px) scale(1.08);
+    transform: rotateY(-10deg) translateZ(30px) scale(1.1);
+    filter: drop-shadow(0 20px 40px rgba(147, 51, 234, 0.3));
+  }
+}
+
+@layer utilities {
+  /* Gradient Animation */
+  @keyframes gradient-x {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 3s ease infinite;
+  }
+  
+  /* Shimmer Animation */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+  
+  /* Fade In Animation */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out;
+  }
+  
+  /* Pulse Delay Utilities */
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+  
+  .delay-1000 {
+    animation-delay: 1000ms;
+  }
+  
+  /* Glass Effect */
+  .glass-effect {
+    @apply backdrop-blur-xl bg-white/30 dark:bg-gray-900/30 border border-white/20 dark:border-gray-700/20;
+  }
+  
+  /* Neon Glow Effect */
+  .neon-glow {
+    box-shadow: 
+      0 0 5px rgba(147, 51, 234, 0.5),
+      0 0 10px rgba(147, 51, 234, 0.4),
+      0 0 20px rgba(147, 51, 234, 0.3),
+      0 0 40px rgba(236, 72, 153, 0.2);
+  }
+  
+  /* Smooth Transitions */
+  .transition-smooth {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
