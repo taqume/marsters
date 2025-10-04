@@ -2,7 +2,6 @@
  * Represents the difficulty level of an article summary
  */
 export enum DifficultyLevel {
-  ORIGINAL = 'original',
   BEGINNER = 'beginner',
   INTERMEDIATE = 'intermediate',
   ADVANCED = 'advanced',
@@ -20,7 +19,6 @@ export enum Language {
  * Article content at different difficulty levels
  */
 export interface ArticleContent {
-  original: string;
   beginner: string;
   intermediate: string;
   advanced: string;
