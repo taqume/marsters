@@ -7,6 +7,9 @@ interface BookshelfProps {
   articles: Article[];
   onBookSelect: (article: Article) => void;
   selectedArticle: Article | null;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 /**
@@ -16,6 +19,9 @@ interface BookshelfProps {
 export const Bookshelf: React.FC<BookshelfProps> = ({ 
   articles, 
   onBookSelect,
+  currentPage,
+  totalPages,
+  onPageChange,
 }) => {
   // Group books into shelves (6 books per shelf for better spacing)
   const booksPerShelf = 6;
@@ -79,7 +85,7 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-blue-600 rounded-full flex items-center justify-center mb-6 shadow-2xl relative">
               <div className="absolute inset-0 bg-blue-500/30 rounded-full animate-ping" />
-              <div className="text-6xl relative z-10">�</div>
+              <div className="text-6xl relative z-10">🔭</div>
             </div>
             <h3 className="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-2">
               No mission files found
@@ -87,6 +93,55 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
             <p className="text-blue-600 dark:text-blue-400 font-mono text-sm">
               Adjust scanner parameters
             </p>
+          </div>
+        )}
+
+        {/* Pagination Controls - NASA Mission Control Style */}
+        {totalPages > 1 && (
+          <div className="mt-12 flex items-center justify-center gap-4">
+            {/* Previous Button */}
+            <button
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+            >
+              <span className="flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Previous
+              </span>
+            </button>
+
+            {/* Page Info */}
+            <div className="flex items-center gap-3 px-6 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg shadow-lg border border-blue-200 dark:border-blue-700">
+              <span className="text-gray-700 dark:text-gray-300 font-medium">
+                Page
+              </span>
+              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {currentPage}
+              </span>
+              <span className="text-gray-500 dark:text-gray-400">
+                /
+              </span>
+              <span className="text-xl font-semibold text-gray-700 dark:text-gray-300">
+                {totalPages}
+              </span>
+            </div>
+
+            {/* Next Button */}
+            <button
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+            >
+              <span className="flex items-center gap-2">
+                Next
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </button>
           </div>
         )}
       </div>

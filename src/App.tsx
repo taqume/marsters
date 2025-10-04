@@ -18,6 +18,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Apply theme to document
   useEffect(() => {
@@ -37,7 +38,11 @@ function App() {
   useEffect(() => {
     const articles = articleService.searchArticles(searchQuery, language);
     setFilteredArticles(articles);
+    setCurrentPage(1); // Reset to first page on new search
   }, [searchQuery, language]);
+
+  // Get paginated articles
+  const paginatedData = articleService.getPaginatedArticles(filteredArticles, currentPage);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-white dark:from-gray-950 dark:to-black transition-colors relative overflow-hidden">
@@ -362,11 +367,14 @@ function App() {
       {/* Main Content */}
       <main className="pt-32 pb-12 px-6">
         <div className="container mx-auto max-w-7xl">
-          {/* Bookshelf with Horizontal Scrolling */}
+          {/* Bookshelf with Pagination */}
           <Bookshelf
-            articles={filteredArticles}
+            articles={paginatedData.articles}
             onBookSelect={setSelectedArticle}
             selectedArticle={selectedArticle}
+            currentPage={paginatedData.currentPage}
+            totalPages={paginatedData.totalPages}
+            onPageChange={setCurrentPage}
           />
         </div>
       </main>

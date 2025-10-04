@@ -75,9 +75,17 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
               {article.title}
             </div>
             
-            {/* Author */}
-            <div className="text-white/90 text-xs font-medium drop-shadow-md pb-8">
-              {article.author}
+            {/* Bottom section */}
+            <div className="space-y-2 pb-2">
+              {/* Author */}
+              <div className="text-white/90 text-xs font-medium drop-shadow-md">
+                {article.author}
+              </div>
+              
+              {/* Book ID */}
+              <div className="text-white/60 text-[9px] font-mono drop-shadow">
+                #{article.id}
+              </div>
             </div>
           </div>
 

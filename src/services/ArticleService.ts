@@ -47,6 +47,33 @@ export class ArticleService {
   }
 
   /**
+   * Get paginated articles
+   * @param page - Current page (1-indexed)
+   * @param articlesPerPage - Number of articles per page (default: 24)
+   */
+  getPaginatedArticles(articles: Article[], page: number = 1, articlesPerPage: number = 24): {
+    articles: Article[];
+    currentPage: number;
+    totalPages: number;
+    totalArticles: number;
+  } {
+    const totalArticles = articles.length;
+    const totalPages = Math.ceil(totalArticles / articlesPerPage);
+    const currentPage = Math.max(1, Math.min(page, totalPages || 1));
+    
+    const startIndex = (currentPage - 1) * articlesPerPage;
+    const endIndex = startIndex + articlesPerPage;
+    const paginatedArticles = articles.slice(startIndex, endIndex);
+
+    return {
+      articles: paginatedArticles,
+      currentPage,
+      totalPages,
+      totalArticles,
+    };
+  }
+
+  /**
    * Get articles by IDs (for favorites)
    */
   getArticlesByIds(ids: number[]): Article[] {
