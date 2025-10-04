@@ -44,8 +44,8 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
   };
 
   return (
-    <div className="w-full h-[600px] bg-gradient-to-b from-gray-100 to-gray-200 dark:from-dark-bg dark:to-dark-surface rounded-xl shadow-2xl">
-      <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
+  <div className="w-full h-[600px] bg-gradient-to-br from-blue-100 via-white to-blue-300 dark:from-gray-900 dark:via-gray-700 dark:to-gray-900 rounded-2xl shadow-2xl border-4 border-blue-200/40 backdrop-blur-md">
+  <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
         {/* Lighting */}
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} />
@@ -73,10 +73,10 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
           maxPolarAngle={Math.PI / 2}
         />
 
-        {/* Shelf background */}
-        <mesh position={[0, 0, -0.5]} receiveShadow>
+        {/* Modern glass background */}
+        <mesh position={[0, 0, -0.7]} receiveShadow>
           <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial color="#8B7355" roughness={0.9} />
+          <meshPhysicalMaterial color="#e0e7ef" metalness={0.7} roughness={0.1} clearcoat={1} clearcoatRoughness={0.1} transparent opacity={0.6} />
         </mesh>
       </Canvas>
     </div>

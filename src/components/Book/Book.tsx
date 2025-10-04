@@ -9,15 +9,20 @@ interface BookProps {
   position: [number, number, number];
   onClick: () => void;
   isSelected: boolean;
+  width?: number;
+  height?: number;
 }
 
 /**
  * 3D Book Component
  * Represents an article as a book on the shelf
  */
-export const Book: React.FC<BookProps> = ({ article, position, onClick, isSelected }) => {
+export const Book: React.FC<BookProps> = ({ article, position, onClick, isSelected, width, height }) => {
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
+  // Default book size if not provided
+  const bookWidth = typeof width === 'number' ? width : 0.8;
+  const bookHeight = typeof height === 'number' ? height : 1.2;
 
   // Animation - floating effect when hovered
   useFrame((state) => {
@@ -44,7 +49,7 @@ export const Book: React.FC<BookProps> = ({ article, position, onClick, isSelect
         scale={scale as any}
       >
         {/* Book cover */}
-        <boxGeometry args={[0.8, 1.2, 0.15]} />
+        <boxGeometry args={[bookWidth, bookHeight, 0.15]} />
         <meshStandardMaterial 
           color={article.coverColor} 
           roughness={0.7}
