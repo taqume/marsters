@@ -156,37 +156,37 @@ export const BookReader: React.FC<BookReaderProps> = ({
         <div className="relative w-[1000px] h-[600px]">
           {/* Difficulty Selector - Top Center */}
           <motion.div
-            className="absolute -top-14 left-0 right-0 mx-auto w-fit flex items-center gap-1 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-neutral-800 dark:to-neutral-900 border-2 border-amber-800/30 dark:border-neutral-600 rounded-lg shadow-lg p-1 z-50"
+            className="absolute -top-14 left-0 right-0 mx-auto w-fit flex items-center gap-1 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-neutral-900/20 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 p-1 z-50"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
           >
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.BEGINNER); }}
-              className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all backdrop-blur-sm ${
                 selectedLevel === DifficultyLevel.BEGINNER
-                  ? 'bg-amber-500 text-white shadow-md'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
+                  ? 'bg-amber-500/90 text-white shadow-lg'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10'
               }`}
             >
               Beginner
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.INTERMEDIATE); }}
-              className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all backdrop-blur-sm ${
                 selectedLevel === DifficultyLevel.INTERMEDIATE
-                  ? 'bg-orange-500 text-white shadow-md'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
+                  ? 'bg-orange-500/90 text-white shadow-lg'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10'
               }`}
             >
               Intermediate
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.ADVANCED); }}
-              className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all backdrop-blur-sm ${
                 selectedLevel === DifficultyLevel.ADVANCED
-                  ? 'bg-red-500 text-white shadow-md'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-amber-200 dark:hover:bg-neutral-700'
+                  ? 'bg-red-500/90 text-white shadow-lg'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10'
               }`}
             >
               Advanced
@@ -222,10 +222,10 @@ export const BookReader: React.FC<BookReaderProps> = ({
           >
             <button
               onClick={(e) => { e.stopPropagation(); handleClose(); }}
-              className="w-12 h-12 bg-red-500/90 hover:bg-red-600 border-2 border-red-700 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+              className="w-12 h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-red-500/30 hover:bg-red-500/50 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 hover:shadow-red-500/30 transition-all flex items-center justify-center"
               title="Close"
             >
-              <X className="w-6 h-6 text-white" />
+              <X className="w-6 h-6 text-red-100" />
             </button>
 
             {article.url && (
@@ -234,16 +234,16 @@ export const BookReader: React.FC<BookReaderProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="w-12 h-12 bg-blue-500/90 hover:bg-blue-600 border-2 border-blue-700 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+                className="w-12 h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-blue-500/30 hover:bg-blue-500/50 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 hover:shadow-blue-500/30 transition-all flex items-center justify-center"
                 title="Open Original Article"
               >
-                <ExternalLink className="w-5 h-5 text-white" />
+                <ExternalLink className="w-5 h-5 text-blue-100" />
               </a>
             )}
 
             <button
               onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}
-              className="w-12 h-12 bg-amber-100 dark:bg-neutral-800 border-2 border-amber-800/30 dark:border-neutral-600 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+              className="w-12 h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/20 dark:bg-neutral-900/30 hover:bg-white/30 dark:hover:bg-neutral-900/50 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 transition-all flex items-center justify-center"
               title={isFavorite(article.id) ? "Remove from Favorites" : "Add to Favorites"}
             >
               {isFavorite(article.id) ? (
@@ -261,18 +261,18 @@ export const BookReader: React.FC<BookReaderProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
           >
-            <div className="flex items-center gap-1 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-neutral-800 dark:to-neutral-900 border-2 border-amber-800/30 dark:border-neutral-600 rounded-lg shadow-lg p-1">
+            <div className="flex items-center gap-1 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-neutral-900/20 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 p-1">
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevPage(); }}
                 disabled={currentPage === 1 || isFlipping}
-                className="px-3 py-2 rounded-md hover:bg-amber-200 dark:hover:bg-neutral-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center"
+                className="px-3 py-2 rounded-xl hover:bg-white/20 dark:hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center backdrop-blur-sm"
                 title="Previous Page"
               >
                 <ChevronLeft className="w-4 h-4 text-gray-800 dark:text-amber-100" />
               </button>
 
               <div className="px-4 py-2 flex items-center gap-2">
-                <BookOpen className="w-3.5 h-3.5 text-amber-800 dark:text-amber-200" />
+                <BookOpen className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                 <span className="text-xs font-semibold text-gray-800 dark:text-amber-50 min-w-[50px] text-center">
                   {currentPage} / {totalPages}
                 </span>
@@ -281,7 +281,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextPage(); }}
                 disabled={currentPage === totalPages || isFlipping}
-                className="px-3 py-2 rounded-md hover:bg-amber-200 dark:hover:bg-neutral-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center"
+                className="px-3 py-2 rounded-xl hover:bg-white/20 dark:hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center backdrop-blur-sm"
                 title="Next Page"
               >
                 <ChevronRight className="w-4 h-4 text-gray-800 dark:text-amber-100" />

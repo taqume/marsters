@@ -24,9 +24,9 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl bg-white/70 dark:bg-gray-950/70 border-b border-blue-200/30 dark:border-blue-400/20 shadow-2xl transition-all">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-[15px] backdrop-saturate-[200%] bg-white/5 dark:bg-gray-950/15 border-b border-white/50 dark:border-white/30 shadow-2xl shadow-black/10 transition-all rounded-b-3xl">
       {/* Space Mission Accent Line */}
-      <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 animate-gradient-x relative overflow-hidden">
+      <div className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 animate-gradient-x relative overflow-hidden rounded-b-3xl">
         {/* Scanning line effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" style={{
           backgroundSize: '200% 100%',

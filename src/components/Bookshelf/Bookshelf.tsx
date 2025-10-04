@@ -143,7 +143,7 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+              className="group relative px-6 py-3 backdrop-blur-[20px] backdrop-saturate-[200%] bg-blue-500/20 dark:bg-blue-600/20 hover:bg-blue-500/40 dark:hover:bg-blue-600/40 text-blue-100 dark:text-blue-100 border-2 border-white/30 dark:border-white/10 rounded-2xl font-medium shadow-2xl shadow-black/20 hover:shadow-blue-500/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-2xl"
             >
               <span className="flex items-center gap-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +154,7 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
             </button>
 
             {/* Page Info with Editable Input */}
-            <div className="flex items-center gap-3 px-6 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg shadow-lg border border-blue-200 dark:border-blue-700">
+            <div className="flex items-center gap-3 px-6 py-3 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-gray-900/20 rounded-2xl shadow-2xl shadow-black/20 border-2 border-white/30 dark:border-white/10">
               <span className="text-gray-700 dark:text-gray-300 font-medium">
                 Page
               </span>
@@ -189,7 +189,7 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+              className="group relative px-6 py-3 backdrop-blur-[20px] backdrop-saturate-[200%] bg-blue-500/20 dark:bg-blue-600/20 hover:bg-blue-500/40 dark:hover:bg-blue-600/40 text-blue-100 dark:text-blue-100 border-2 border-white/30 dark:border-white/10 rounded-2xl font-medium shadow-2xl shadow-black/20 hover:shadow-blue-500/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-2xl"
             >
               <span className="flex items-center gap-2">
                 Next
