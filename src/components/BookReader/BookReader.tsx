@@ -78,16 +78,49 @@ export const BookReader: React.FC<BookReaderProps> = ({
     ? (language === 'tr' && article.translations?.tr?.summary 
         ? article.translations.tr.summary[selectedLevel]
         : article.summary[selectedLevel])
-    : content.substring(0, 500) + '...'; // Fallback to first 500 chars
+    : content.substring(0, 400) + '...'; // Fallback to first 400 chars
 
-  // Split content into pages (approximately 600 characters per page)
-  const charsPerPage = 600;
-  const totalPages = Math.ceil(content.length / charsPerPage);
+  // Split content into pages (approximately 650 characters per page for perfect fit)
+  const charsPerPage = 650;
   
-  const getPageContent = (pageNum: number) => {
-    const startIndex = (pageNum - 1) * charsPerPage;
-    const endIndex = startIndex + charsPerPage;
-    return content.substring(startIndex, endIndex);
+  // Calculate dynamic page breaks (don't break words)
+  const calculatePageBreaks = (text: string): number[] => {
+    const breaks: number[] = [0];
+    let currentPos = 0;
+    
+    while (currentPos < text.length) {
+      let nextBreak = currentPos + charsPerPage;
+      
+      if (nextBreak >= text.length) {
+        breaks.push(text.length);
+        break;
+      }
+      
+      // Find next space after the target position
+      const searchEnd = Math.min(nextBreak + 50, text.length);
+      const remainingText = text.substring(nextBreak, searchEnd);
+      const nextSpaceIndex = remainingText.search(/\s/);
+      
+      if (nextSpaceIndex !== -1) {
+        nextBreak = nextBreak + nextSpaceIndex + 1; // +1 to skip the space
+      }
+      
+      breaks.push(nextBreak);
+      currentPos = nextBreak;
+    }
+    
+    return breaks;
+  };
+  
+  const pageBreaks = calculatePageBreaks(content);
+  const contentPages = pageBreaks.length - 1;
+  const totalPages = Math.ceil((contentPages + 1) / 2); // +1 for info, then pairs
+  
+  const getPageContent = (contentPageIndex: number) => {
+    if (contentPageIndex < 0 || contentPageIndex >= contentPages) return '';
+    const startIndex = pageBreaks[contentPageIndex];
+    const endIndex = pageBreaks[contentPageIndex + 1];
+    return content.substring(startIndex, endIndex).trim();
   };
 
   // Calculate reading progress
@@ -154,8 +187,16 @@ export const BookReader: React.FC<BookReaderProps> = ({
     }
   };
 
-  const leftPageContent = currentPage === 1 ? summary : getPageContent(currentPage - 1);
-  const rightPageContent = getPageContent(currentPage);
+  // Page content logic
+  // currentPage 1: info (left) + content[0] (right)
+  // currentPage 2: content[1] (left) + content[2] (right)
+  // currentPage 3: content[3] (left) + content[4] (right)
+  const leftPageIsInfo = currentPage === 1;
+  const leftContentIndex = leftPageIsInfo ? -1 : (currentPage - 1) * 2 - 1;
+  const rightContentIndex = (currentPage - 1) * 2;
+
+  const leftPageContent = leftPageIsInfo ? summary : getPageContent(leftContentIndex);
+  const rightPageContent = getPageContent(rightContentIndex);
 
   return (
     <AnimatePresence>
@@ -388,7 +429,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
                   }}
                 />
 
-                <div className="relative h-full p-16 overflow-y-auto custom-scrollbar">
+                <div className="relative h-full py-10 pl-10 pr-14 overflow-hidden">
                   {currentPage === 1 ? (
                     // Info Page
                     <div className="space-y-6">
@@ -420,7 +461,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
                         <h2 className="text-xl font-serif font-bold text-gray-900 dark:text-amber-50 mb-2">
                           {t('book.summary')}
                         </h2>
-                        <p className="text-sm leading-relaxed text-gray-800 dark:text-amber-100 font-serif">
+                        <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif">
                           {summary}
                         </p>
                       </div>
@@ -428,7 +469,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
                   ) : (
                     // Content Page
                     <div className="prose dark:prose-invert max-w-none">
-                      <p className="text-sm leading-relaxed text-gray-800 dark:text-amber-100 font-serif whitespace-pre-wrap">
+                      <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
                         {leftPageContent}
                       </p>
                     </div>
@@ -436,7 +477,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
                   
                   {/* Page Number */}
                   <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
-                    {currentPage === 1 ? 'i' : (currentPage - 1) * 2}
+                    {currentPage * 2 - 1}
                   </div>
                 </div>
               </motion.div>
@@ -471,16 +512,16 @@ export const BookReader: React.FC<BookReaderProps> = ({
                   }}
                 />
 
-                <div className="relative h-full p-16 overflow-y-auto custom-scrollbar">
+                <div className="relative h-full py-10 pl-14 pr-10 overflow-hidden">
                   <div className="prose dark:prose-invert max-w-none">
-                    <p className="text-sm leading-relaxed text-gray-800 dark:text-amber-100 font-serif whitespace-pre-wrap">
+                    <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
                       {rightPageContent}
                     </p>
                   </div>
                   
                   {/* Page Number */}
                   <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
-                    {currentPage * 2 + 1}
+                    {currentPage * 2}
                   </div>
                 </div>
               </motion.div>
