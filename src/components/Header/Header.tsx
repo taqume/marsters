@@ -28,11 +28,11 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
       {/* Gradient Accent Line */}
       <div className="h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 animate-gradient-x" />
       
-      <div className="container mx-auto px-6 py-4">
-        {/* Top Row: Logo, Controls */}
-        <div className="flex items-center justify-between mb-4">
+      <div className="container mx-auto px-6 py-3">
+        {/* Single Row: Logo, SearchBar, Controls */}
+        <div className="flex items-center justify-between gap-6">
           {/* Logo/Title - Modern Branding */}
-          <div className="flex items-center space-x-4 group">
+          <div className="flex items-center space-x-4 group flex-shrink-0">
             <div className="relative">
               {/* Glow effect behind logo */}
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity" />
@@ -50,8 +50,13 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
             </div>
           </div>
 
+          {/* Search Bar - Center */}
+          <div className="flex-1 max-w-2xl">
+            <SearchBar value={searchQuery} onChange={onSearchChange} />
+          </div>
+
           {/* Controls - Modern Pills */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-shrink-0">
             {/* Language Switcher */}
             <button
               onClick={handleLanguageChange}
@@ -80,11 +85,6 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
               <div className="absolute inset-0 bg-white/20 dark:bg-white/10 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-500 rounded-full" />
             </button>
           </div>
-        </div>
-
-        {/* Bottom Row: Modern Search Bar */}
-        <div className="max-w-3xl mx-auto">
-          <SearchBar value={searchQuery} onChange={onSearchChange} />
         </div>
       </div>
     </header>
