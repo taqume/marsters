@@ -1,9 +1,7 @@
 import React from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
 import { Article } from '@models/Article';
 import { Book } from '../Book/Book';
-import { BookshelfFallback } from './BookshelfFallback';
+import { motion } from 'framer-motion';
 
 interface BookshelfProps {
   articles: Article[];
@@ -12,97 +10,85 @@ interface BookshelfProps {
 }
 
 /**
- * 3D Bookshelf Component
- * Displays articles as books on a virtual shelf
+ * NASA Space-Themed Bookshelf Component
+ * Space station shelf system with holographic effects
  */
 export const Bookshelf: React.FC<BookshelfProps> = ({ 
   articles, 
   onBookSelect,
-  selectedArticle 
 }) => {
-  // Fallback to 2D if WebGL not supported
-  if (typeof window !== 'undefined' && !window.WebGLRenderingContext) {
-    return (
-      <BookshelfFallback 
-        articles={articles} 
-        onBookSelect={onBookSelect} 
-      />
-    );
+  // Group books into shelves (8 books per shelf)
+  const booksPerShelf = 8;
+  const shelves: Article[][] = [];
+  
+  for (let i = 0; i < articles.length; i += booksPerShelf) {
+    shelves.push(articles.slice(i, i + booksPerShelf));
   }
 
-  // Calculate book positions so upper shelves are filled first
-  const booksPerShelf = 5;
-  const totalBooks = articles.length;
-  const totalRows = Math.ceil(totalBooks / booksPerShelf);
-  // Fill upper shelves first: books are packed from top row to bottom
-  const getBookPosition = (index: number): [number, number, number] => {
-    // Compute row and col so that first row is always full if possible
-    const row = Math.floor(index / booksPerShelf);
-    const col = index % booksPerShelf;
-    return [
-      (col - booksPerShelf / 2) * 1.5,
-      -row * 1.5,
-      0
-    ];
-  };
-
   return (
-    <div className="w-full h-[600px] bg-gradient-to-b from-gray-100 to-gray-200 dark:from-dark-bg dark:to-dark-surface rounded-xl shadow-2xl">
-      <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
-        {/* Lighting */}
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={0.5} />
+    <div className="w-full min-h-[700px] relative">
+      {/* Content Container */}
+      <div className="relative z-10 py-10 px-6">
+        {/* Shelves - Space Station Modules */}
+        <div className="space-y-20">
+          {shelves.map((shelfBooks, shelfIndex) => (
+            <div key={shelfIndex} className="shelf-container relative">
+              {/* Space Station Shelf Board - Clean Glassmorphism */}
+              <div className="shelf-board absolute bottom-0 left-0 right-0 h-4 backdrop-blur-md bg-gradient-to-b from-blue-300/20 via-blue-400/15 to-blue-500/20 dark:from-blue-700/25 dark:via-blue-800/20 dark:to-blue-900/25 rounded-lg shadow-xl border-t border-blue-200/40 dark:border-blue-400/30">
+                {/* Glossy top edge */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-blue-300/50 to-transparent" />
+                
+                {/* Bottom depth */}
+                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-b from-transparent to-blue-500/30 dark:to-blue-400/20 rounded-b-lg" />
+              </div>
 
-        {/* Environment */}
-        <Environment preset="city" />
+              {/* Books Container */}
+              <div className="books-row pb-6 mb-4">
+                <div className="flex items-end justify-center space-x-7 px-6 pb-4">
+                  {shelfBooks.map((article, index) => (
+                    <motion.div
+                      key={article.id}
+                      initial={{ opacity: 0, y: 50, rotateY: -30 }}
+                      animate={{ opacity: 1, y: 0, rotateY: 0 }}
+                      transition={{ 
+                        delay: index * 0.1,
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 25
+                      }}
+                      whileHover={{ 
+                        y: -10,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
+                      <Book
+                        article={article}
+                        onClick={() => onBookSelect(article)}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-        {/* Books - fill upper shelves first */}
-        {Array.from({ length: totalRows }).flatMap((_, rowIdx) => {
-          // For each row, fill up to booksPerShelf books
-          return Array.from({ length: booksPerShelf }).map((_, colIdx) => {
-            const bookIdx = rowIdx * booksPerShelf + colIdx;
-            if (bookIdx >= totalBooks) return null;
-            const article = articles[bookIdx];
-            return (
-              <Book
-                key={article.id}
-                article={article}
-                position={[(colIdx - booksPerShelf / 2) * 1.5, -rowIdx * 1.5, 0]}
-                onClick={() => onBookSelect(article)}
-                isSelected={selectedArticle?.id === article.id}
-              />
-            );
-          });
-        })}
-
-        {/* Realistic shelves under each row */}
-        {Array.from({ length: Math.ceil(articles.length / booksPerShelf) }).map((_, rowIdx) => (
-          <mesh
-            key={rowIdx}
-            position={[0, -rowIdx * 1.5 - 0.7, 0]}
-            castShadow
-            receiveShadow
-          >
-            <boxGeometry args={[booksPerShelf * 1.5, 0.15, 0.3]} />
-            <meshStandardMaterial color="#a67c52" roughness={0.8} />
-          </mesh>
-        ))}
-
-        {/* Camera controls */}
-        <OrbitControls 
-          enablePan={false}
-          minDistance={5}
-          maxDistance={15}
-          maxPolarAngle={Math.PI / 2}
-        />
-
-        {/* Shelf background */}
-        <mesh position={[0, 0, -0.5]} receiveShadow>
-          <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial color="#8B7355" roughness={0.9} />
-        </mesh>
-      </Canvas>
+        {/* Empty State - Space Explorer */}
+        {articles.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-blue-600 rounded-full flex items-center justify-center mb-6 shadow-2xl relative">
+              <div className="absolute inset-0 bg-blue-500/30 rounded-full animate-ping" />
+              <div className="text-6xl relative z-10">�</div>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-2">
+              No mission files found
+            </h3>
+            <p className="text-blue-600 dark:text-blue-400 font-mono text-sm">
+              Adjust scanner parameters
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
