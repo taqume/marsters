@@ -6,6 +6,12 @@
     "date": "2024-02-02",
     "category": "Space Medicine",
     "coverColor": "#4ECDC4",
+    "url": "https://www.nasa.gov/biological-physical/microbial-systems",
+    "summary": {
+      "beginner": "This research explores how microorganisms behave in space environments. Scientists discovered that bacteria adapt differently in zero gravity, which is important for long-term space missions and astronaut health.",
+      "intermediate": "This comprehensive study examines microbial adaptation mechanisms in extraterrestrial environments, analyzing cellular behavior under microgravity conditions. The research provides crucial insights for developing sustainable life support systems for extended space missions.",
+      "advanced": "This investigation employs advanced proteomics and genomic sequencing to elucidate the molecular mechanisms underlying microbial adaptation to spaceflight conditions. Findings demonstrate significant alterations in gene expression patterns, metabolic pathways, and stress response systems, with implications for bioregenerative life support systems and planetary protection protocols."
+    },
     "content": {
       "beginner": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
       "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
@@ -13,13 +19,18 @@
     },
     "translations": {
       "tr": {
-        "title": "Study on Microbial Systems",
+        "title": "Mikrobiyal Sistemler Üzerine Çalışma",
         "author": "Dr. Michael Rodriguez",
-        "category": "Space Medicine",
+        "category": "Uzay Tıbbı",
+        "summary": {
+          "beginner": "Bu araştırma, mikroorganizmaların uzay ortamlarında nasıl davrandığını inceliyor. Bilim insanları bakterilerin sıfır yerçekiminde farklı uyum sağladığını keşfetti, bu da uzun süreli uzay görevleri ve astronot sağlığı için önemlidir.",
+          "intermediate": "Bu kapsamlı çalışma, dünya dışı ortamlarda mikrobiyal adaptasyon mekanizmalarını incelemekte ve mikro yerçekimi koşulları altında hücresel davranışları analiz etmektedir. Araştırma, uzun süreli uzay görevleri için sürdürülebilir yaşam destek sistemleri geliştirmek açısından kritik içgörüler sunmaktadır.",
+          "advanced": "Bu araştırma, uzay uçuşu koşullarına mikrobiyal adaptasyonun altında yatan moleküler mekanizmaları aydınlatmak için gelişmiş proteomik ve genomik dizileme kullanmaktadır. Bulgular, gen ekspresyon paternlerinde, metabolik yollarda ve stres yanıt sistemlerinde önemli değişiklikler göstermekte ve biyorejeneratif yaşam destek sistemleri ile gezegen koruma protokolleri için önemli sonuçlar ortaya koymaktadır."
+        },
         "content": {
-          "beginner": "Lorem ipsum, consectetur adipiscing elit konusunda yap─▒lan ara┼şt─▒rmalar. Sed do eiusmod tempor incididunt ├ğal─▒┼şmalar─▒. Ut enim ad minim veniam bulgular.",
-          "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit alan─▒nda yap─▒lan detayl─▒ incelemeler. Quis nostrud exercitation ullamco laboris kapsam─▒nda elde edilen veriler. Duis aute irure dolor in reprehenderit sonu├ğlar─▒.",
-          "advanced": "Lorem ipsum dolor sit amet, consectetur adipiscing elit konusunda yap─▒lan ileri d├╝zey molek├╝ler ├ğal─▒┼şmalar. Quis ipsum suspendisse ultrices gravida risus commodo viverra maecenas kapsam─▒nda elde edilen bulgular. Consequat mauris nunc congue nisi vitae suscipit analiz sonu├ğlar─▒."
+          "beginner": "Lorem ipsum, consectetur adipiscing elit konusunda yapılan araştırmalar. Sed do eiusmod tempor incididunt çalışmaları. Ut enim ad minim veniam bulgular.",
+          "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit alanında yapılan detaylı incelemeler. Quis nostrud exercitation ullamco laboris kapsamında elde edilen veriler. Duis aute irure dolor in reprehenderit sonuçları.",
+          "advanced": "Lorem ipsum dolor sit amet, consectetur adipiscing elit konusunda yapılan ileri düzey moleküler çalışmalar. Quis ipsum suspendisse ultrices gravida risus commodo viverra maecenas kapsamında elde edilen bulgular. Consequat mauris nunc congue nisi vitae suscipit analiz sonuçları."
         }
       }
     }
@@ -31,6 +42,12 @@
     "date": "2024-03-03",
     "category": "Microbiology",
     "coverColor": "#95E1D3",
+    "url": "https://www.nasa.gov/biological-physical/microbiology-research",
+    "summary": {
+      "beginner": "This study looks at how tiny organisms survive in harsh space conditions. Understanding these survival strategies helps scientists prepare for future space exploration and protect astronauts from harmful microbes.",
+      "intermediate": "This research investigates microbial resilience and survival mechanisms in extreme extraterrestrial environments. The study examines bacterial biofilm formation, radiation resistance, and metabolic adaptations that could impact spacecraft sterilization protocols and crew health management.",
+      "advanced": "This multidisciplinary investigation employs cutting-edge metagenomics and systems biology approaches to characterize microbial community dynamics in simulated extraterrestrial habitats. The research elucidates novel extremophile adaptation strategies, quorum sensing mechanisms, and horizontal gene transfer events with significant implications for astrobiology and closed-loop ecological life support systems."
+    },
     "content": {
       "beginner": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
       "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
@@ -38,13 +55,18 @@
     },
     "translations": {
       "tr": {
-        "title": "Research in Microbial Systems",
+        "title": "Mikrobiyal Sistemlerde Araştırma",
         "author": "Dr. Emily Watson",
-        "category": "Microbiology",
+        "category": "Mikrobiyoloji",
+        "summary": {
+          "beginner": "Bu çalışma, küçük organizmaların zorlu uzay koşullarında nasıl hayatta kaldığını inceliyor. Bu hayatta kalma stratejilerini anlamak, bilim insanlarının gelecekteki uzay keşifleri için hazırlanmasına ve astronotları zararlı mikroplardan korumasına yardımcı oluyor.",
+          "intermediate": "Bu araştırma, aşırı dünya dışı ortamlarda mikrobiyal direnç ve hayatta kalma mekanizmalarını araştırmaktadır. Çalışma, uzay aracı sterilizasyon protokollerini ve mürettebat sağlık yönetimini etkileyebilecek bakteriyel biyofilm oluşumu, radyasyon direnci ve metabolik adaptasyonları incelemektedir.",
+          "advanced": "Bu multidisipliner araştırma, simüle edilmiş dünya dışı habitatlarda mikrobiyal topluluk dinamiklerini karakterize etmek için son teknoloji metagenomik ve sistemler biyolojisi yaklaşımları kullanmaktadır. Araştırma, astrobiyoloji ve kapalı döngü ekolojik yaşam destek sistemleri için önemli sonuçları olan yeni ekstremofil adaptasyon stratejilerini, çoğunluk algılama mekanizmalarını ve yatay gen aktarım olaylarını aydınlatmaktadır."
+        },
         "content": {
-          "beginner": "Lorem ipsum, consectetur adipiscing elit konusunda yap─▒lan ara┼şt─▒rmalar. Sed do eiusmod tempor incididunt ├ğal─▒┼şmalar─▒. Ut enim ad minim veniam bulgular.",
-          "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit alan─▒nda yap─▒lan detayl─▒ incelemeler. Quis nostrud exercitation ullamco laboris kapsam─▒nda elde edilen veriler. Duis aute irure dolor in reprehenderit sonu├ğlar─▒.",
-          "advanced": "Lorem ipsum dolor sit amet, consectetur adipiscing elit konusunda yap─▒lan ileri d├╝zey molek├╝ler ├ğal─▒┼şmalar. Quis ipsum suspendisse ultrices gravida risus commodo viverra maecenas kapsam─▒nda elde edilen bulgular. Consequat mauris nunc congue nisi vitae suscipit analiz sonu├ğlar─▒."
+          "beginner": "Lorem ipsum, consectetur adipiscing elit konusunda yapılan araştırmalar. Sed do eiusmod tempor incididunt çalışmaları. Ut enim ad minim veniam bulgular.",
+          "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit alanında yapılan detaylı incelemeler. Quis nostrud exercitation ullamco laboris kapsamında elde edilen veriler. Duis aute irure dolor in reprehenderit sonuçları.",
+          "advanced": "Lorem ipsum dolor sit amet, consectetur adipiscing elit konusunda yapılan ileri düzey moleküler çalışmalar. Quis ipsum suspendisse ultrices gravida risus commodo viverra maecenas kapsamında elde edilen bulgular. Consequat mauris nunc congue nisi vitae suscipit analiz sonuçları."
         }
       }
     }
@@ -56,20 +78,31 @@
     "date": "2024-04-04",
     "category": "Genetics",
     "coverColor": "#F38181",
+    "url": "https://www.nasa.gov/biological-physical/genetics-microbial",
+    "summary": {
+      "beginner": "Scientists are studying how space affects the genes of microorganisms. These genetic changes could help us understand how life adapts to new environments and what challenges astronauts might face during long missions.",
+      "intermediate": "This genetic investigation analyzes how microgravity and cosmic radiation influence microbial DNA, gene expression, and evolutionary adaptations. The findings have important implications for understanding mutation rates, genetic stability, and the development of space-hardy organisms for biotechnological applications.",
+      "advanced": "This comprehensive genomic analysis utilizes next-generation sequencing, CRISPR-based genome editing, and computational evolutionary biology to decipher the molecular genetic mechanisms underlying microbial adaptation to spaceflight stressors. The research reveals novel insights into horizontal gene transfer networks, epigenetic modifications, and accelerated evolutionary trajectories with profound implications for synthetic biology applications in extraterrestrial resource utilization."
+    },
     "content": {
-      "beginner": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      "beginner": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
       "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
       "advanced": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. Consequat mauris nunc congue nisi vitae suscipit tellus mauris a. Nunc sed velit dignissim sodales ut eu sem integer vitae. Feugiat vivamus at augue eget arcu dictum varius duis at."
     },
     "translations": {
       "tr": {
-        "title": "Investigation of Microbial Systems",
+        "title": "Mikrobiyal Sistemlerin İncelenmesi",
         "author": "Dr. James Park",
         "category": "Genetics",
+        "summary": {
+          "beginner": "Bilim insanları uzayın mikroorganizmaların genleri üzerindeki etkilerini inceliyor. Bu genetik değişiklikler, yaşamın yeni ortamlara nasıl adapte olduğunu ve astronotların uzun görevler sırasında karşılaşabilecekleri zorlukları anlamamıza yardımcı olabilir.",
+          "intermediate": "Bu genetik araştırma, mikro yerçekimi ve kozmik radyasyonun mikrobiyal DNA, gen ekspresyonu ve evrimsel adaptasyonları nasıl etkilediğini analiz etmektedir. Bulgular, mutasyon oranları, genetik stabilite ve biyoteknolojik uygulamalar için uzay-dayanıklı organizmaların geliştirilmesini anlamak açısından önemli sonuçlara sahiptir.",
+          "advanced": "Bu kapsamlı genomik analiz, uzay uçuşu stresörlerine mikrobiyal adaptasyonun altında yatan moleküler genetik mekanizmaları deşifre etmek için yeni nesil dizileme, CRISPR tabanlı genom düzenleme ve hesaplamalı evrimsel biyoloji kullanmaktadır. Araştırma, dünya dışı kaynak kullanımında sentetik biyoloji uygulamaları için derin sonuçları olan yatay gen transfer ağları, epigenetik modifikasyonlar ve hızlandırılmış evrimsel yörüngeler hakkında yeni içgörüler ortaya koymaktadır."
+        },
         "content": {
-          "beginner": "Lorem ipsum, consectetur adipiscing elit konusunda yap─▒lan ara┼şt─▒rmalar. Sed do eiusmod tempor incididunt ├ğal─▒┼şmalar─▒. Ut enim ad minim veniam bulgular.",
-          "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit alan─▒nda yap─▒lan detayl─▒ incelemeler. Quis nostrud exercitation ullamco laboris kapsam─▒nda elde edilen veriler. Duis aute irure dolor in reprehenderit sonu├ğlar─▒.",
-          "advanced": "Lorem ipsum dolor sit amet, consectetur adipiscing elit konusunda yap─▒lan ileri d├╝zey molek├╝ler ├ğal─▒┼şmalar. Quis ipsum suspendisse ultrices gravida risus commodo viverra maecenas kapsam─▒nda elde edilen bulgular. Consequat mauris nunc congue nisi vitae suscipit analiz sonu├ğlar─▒."
+          "beginner": "Lorem ipsum, consectetur adipiscing elit konusunda yapılan araştırmalar. Sed do eiusmod tempor incididunt çalışmaları. Ut enim ad minim veniam bulgular.",
+          "intermediate": "Lorem ipsum dolor sit amet, consectetur adipiscing elit alanında yapılan detaylı incelemeler. Quis nostrud exercitation ullamco laboris kapsamında elde edilen veriler. Duis aute irure dolor in reprehenderit sonuçları.",
+          "advanced": "Lorem ipsum dolor sit amet, consectetur adipiscing elit konusunda yapılan ileri düzey moleküler çalışmalar. Quis ipsum suspendisse ultrices gravida risus commodo viverra maecenas kapsamında elde edilen bulgular. Consequat mauris nunc congue nisi vitae suscipit analiz sonuçları."
         }
       }
     }
@@ -88,7 +121,7 @@
     },
     "translations": {
       "tr": {
-        "title": "Exploration of Microbial Systems",
+        "title": "Mikrobiyal Sistemlerin Keşfi",
         "author": "Dr. Linda Zhang",
         "category": "Neuroscience",
         "content": {
@@ -113,7 +146,7 @@
     },
     "translations": {
       "tr": {
-        "title": "Understanding Microbial Systems",
+        "title": "Mikrobiyal Sistemleri Anlama",
         "author": "Dr. Robert Kim",
         "category": "Plant Biology",
         "content": {
@@ -138,7 +171,7 @@
     },
     "translations": {
       "tr": {
-        "title": "Development of Microbial Systems",
+        "title": "Mikrobiyal Sistemlerin Gelişimi",
         "author": "Dr. Amanda Foster",
         "category": "Cellular Biology",
         "content": {

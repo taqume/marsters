@@ -32,6 +32,7 @@ export interface ArticleTranslations {
     title: string;
     author: string;
     category: string;
+    summary?: ArticleContent;
     content: ArticleContent;
   };
 }
@@ -48,6 +49,8 @@ export interface Article {
   category: string;
   coverColor: string;
   content: ArticleContent;
+  summary?: ArticleContent; // Optional summary for the info page
+  url?: string; // Original article URL
   translations: ArticleTranslations;
 }
 

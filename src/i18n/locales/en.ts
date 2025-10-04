@@ -21,6 +21,17 @@ export default {
       removeFromFavorites: 'Remove from Favorites',
       original: 'Original',
     },
+    book: {
+      by: 'by',
+      category: 'Category',
+      published: 'Published',
+      pages: 'Pages',
+      summary: 'Summary',
+      beginner: 'Beginner',
+      intermediate: 'Intermediate',
+      advanced: 'Advanced',
+      completed: 'completed',
+    },
     statistics: {
       title: 'Reading Statistics',
       totalArticlesRead: 'Total Articles Read',

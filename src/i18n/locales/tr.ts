@@ -21,6 +21,17 @@ export default {
       removeFromFavorites: 'Favorilerden Çıkar',
       original: 'Orijinal',
     },
+    book: {
+      by: 'yazan',
+      category: 'Kategori',
+      published: 'Yayınlanma',
+      pages: 'Sayfa',
+      summary: 'Özet',
+      beginner: 'Başlangıç',
+      intermediate: 'Orta',
+      advanced: 'Gelişmiş',
+      completed: 'tamamlandı',
+    },
     statistics: {
       title: 'Okuma İstatistikleri',
       totalArticlesRead: 'Toplam Okunan Makale',

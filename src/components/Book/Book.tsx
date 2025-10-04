@@ -1,5 +1,7 @@
 import { Article } from '@models/Article';
 import { motion } from 'framer-motion';
+import { useSettingsStore } from '@stores/settingsStore';
+import { articleService } from '@services/ArticleService';
 
 interface BookProps {
   article: Article;
@@ -11,6 +13,13 @@ interface BookProps {
  * Features: Thick cover, visible pages, realistic depth
  */
 export const Book: React.FC<BookProps> = ({ article, onClick }) => {
+  const { language } = useSettingsStore();
+  
+  // Get localized title and author
+  const localizedTitle = articleService.getLocalizedTitle(article, language);
+  const localizedAuthor = language === 'tr' && article.translations?.tr
+    ? article.translations.tr.author
+    : article.author;
   return (
     <motion.div
       onClick={onClick}
@@ -127,14 +136,14 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
           <div className="relative h-full flex flex-col justify-between p-5">
             {/* Title */}
             <div className="font-serif font-bold text-sm leading-tight pt-8" style={{ color: '#D4AF37', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-              {article.title}
+              {localizedTitle}
             </div>
             
             {/* Bottom section */}
             <div className="space-y-3 pb-2">
               {/* Author */}
               <div className="text-xs font-medium" style={{ color: '#C5A572', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-                {article.author}
+                {localizedAuthor}
               </div>
               
               {/* Book ID - Centered at bottom */}
@@ -193,7 +202,7 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
                 textShadow: '0 1px 3px rgba(0,0,0,0.5)',
               }}
             >
-              {article.title.substring(0, 30)}
+              {localizedTitle.substring(0, 30)}
             </span>
           </div>
         </div>

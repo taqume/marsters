@@ -5,7 +5,7 @@ import { articleService } from '@services/ArticleService';
 import { useSettingsStore } from '@stores/settingsStore';
 import { Header } from '@components/Header/Header';
 import { Bookshelf } from '@components/Bookshelf/Bookshelf';
-import { ArticleViewer } from '@components/ArticleViewer/ArticleViewer';
+import { BookReader } from '@components/BookReader/BookReader';
 import './i18n/config';
 
 /**
@@ -379,9 +379,9 @@ function App() {
         </div>
       </main>
 
-      {/* Article Viewer Modal */}
+      {/* Book Reader Modal */}
       {selectedArticle && (
-        <ArticleViewer
+        <BookReader
           article={selectedArticle}
           onClose={() => setSelectedArticle(null)}
         />
