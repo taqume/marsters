@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { X, Heart, ExternalLink, ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
 import { Article, DifficultyLevel } from '@models/Article';
 import { articleService } from '@services/ArticleService';
@@ -23,6 +24,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
   clickPosition,
   onClose
 }) => {
+  const { t } = useTranslation();
   const { language } = useSettingsStore();
   const { isFavorite, addFavorite, removeFavorite } = useFavoritesStore();
   const { startReading } = useReadingHistoryStore();
@@ -61,7 +63,14 @@ export const BookReader: React.FC<BookReaderProps> = ({
     }
   }, [article.id, selectedLevel, startReading, isReading]);
 
-  // Get localized content
+  // Get localized content and metadata
+  const title = articleService.getLocalizedTitle(article, language);
+  const author = language === 'tr' && article.translations?.tr?.author
+    ? article.translations.tr.author
+    : article.author;
+  const category = language === 'tr' && article.translations?.tr?.category
+    ? article.translations.tr.category
+    : article.category;
   const content = articleService.getLocalizedContent(article, language, selectedLevel);
 
   // Split content into pages (approximately 650 characters per page for perfect fit)
@@ -98,7 +107,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
   
   const pageBreaks = calculatePageBreaks(content);
   const contentPages = pageBreaks.length - 1;
-  const totalPages = Math.ceil(contentPages / 2); // Content pages divided into pairs
+  const totalPages = Math.ceil((contentPages + 1) / 2); // +1 for info page, then pairs
   
   const getPageContent = (contentPageIndex: number) => {
     if (contentPageIndex < 0 || contentPageIndex >= contentPages) return '';
@@ -166,22 +175,23 @@ export const BookReader: React.FC<BookReaderProps> = ({
   };
 
   // Page content logic
-  // currentPage 1: content[0] (left) + content[1] (right)
-  // currentPage 2: content[2] (left) + content[3] (right)
-  // currentPage 3: content[4] (left) + content[5] (right)
-  const leftContentIndex = (currentPage - 1) * 2;
-  const rightContentIndex = (currentPage - 1) * 2 + 1;
+  // currentPage 1: info (left) + content[0] (right)
+  // currentPage 2: content[1] (left) + content[2] (right)
+  // currentPage 3: content[3] (left) + content[4] (right)
+  const leftPageIsInfo = currentPage === 1;
+  const leftContentIndex = leftPageIsInfo ? -1 : (currentPage - 1) * 2 - 1;
+  const rightContentIndex = (currentPage - 1) * 2;
 
   // Current pages
   const leftPageContent = getPageContent(leftContentIndex);
   const rightPageContent = getPageContent(rightContentIndex);
 
   // For "next" flip: right page back shows next spread's left page
-  const nextLeftContentIndex = currentPage * 2;
+  const nextLeftContentIndex = currentPage * 2 - 1;
   const nextLeftPageContent = nextLeftContentIndex < pageBreaks.length ? getPageContent(nextLeftContentIndex) : '';
 
   // For "prev" flip: left page back shows previous spread's right page  
-  const prevRightContentIndex = (currentPage - 2) * 2 + 1;
+  const prevRightContentIndex = (currentPage - 2) * 2;
   const prevRightPageContent = prevRightContentIndex >= 0 && prevRightContentIndex < pageBreaks.length 
     ? getPageContent(prevRightContentIndex) 
     : '';
@@ -420,11 +430,63 @@ export const BookReader: React.FC<BookReaderProps> = ({
                   />
 
                   <div className="relative h-full py-10 pl-10 pr-14 overflow-hidden">
-                    <div className="prose dark:prose-invert max-w-none">
-                      <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
-                        {leftPageContent}
-                      </p>
-                    </div>
+                    {leftPageIsInfo ? (
+                      // Info Page - Technical Article Information
+                      <div className="space-y-5">
+                        <div className="border-b-2 border-amber-800/20 dark:border-amber-200/20 pb-4">
+                          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-amber-50 mb-3 leading-tight">
+                            {title}
+                          </h1>
+                          <p className="text-sm text-gray-700 dark:text-amber-100 font-medium">
+                            {t('book.by')} {author}
+                          </p>
+                        </div>
+                        
+                        <div className="space-y-3 text-gray-700 dark:text-amber-100 text-sm">
+                          <div className="flex items-start gap-2">
+                            <span className="font-semibold min-w-[80px]">{t('book.category')}:</span>
+                            <span className="flex-1">{category}</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="font-semibold min-w-[80px]">{t('book.published')}:</span>
+                            <span className="flex-1">{new Date(article.date).toLocaleDateString(language, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="font-semibold min-w-[80px]">{t('book.pages')}:</span>
+                            <span className="flex-1">{totalPages}</span>
+                          </div>
+                          {article.url && (
+                            <div className="flex items-start gap-2">
+                              <span className="font-semibold min-w-[80px]">DOI/URL:</span>
+                              <a 
+                                href={article.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex-1 text-blue-600 dark:text-blue-400 hover:underline break-all text-xs"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {article.url.replace('https://www.ncbi.nlm.nih.gov/pmc/articles/', 'PMC').replace('/', '')}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="pt-3 border-t border-amber-800/20 dark:border-amber-200/20">
+                          <p className="text-xs text-gray-600 dark:text-amber-200/80 italic">
+                            {language === 'tr' 
+                              ? 'Bu makale NASA Biyoloji Kütüphanesi\'nde bulunan gerçek bir bilimsel araştırmadır. Seçtiğiniz zorluk seviyesine göre içerik düzenlenmiştir.'
+                              : 'This is a real scientific research article from the NASA Biology Library. Content is adapted to your selected difficulty level.'}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      // Content Page
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
+                          {leftPageContent}
+                        </p>
+                      </div>
+                    )}
                     
                     {/* Page Number */}
                     <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
