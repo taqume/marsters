@@ -26,7 +26,6 @@ export default {
       category: 'Kategori',
       published: 'Yayınlanma',
       pages: 'Sayfa',
-      summary: 'Özet',
       beginner: 'Başlangıç',
       intermediate: 'Orta',
       advanced: 'Gelişmiş',

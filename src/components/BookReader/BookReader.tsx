@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, ExternalLink, ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
 import { Article, DifficultyLevel } from '@models/Article';
@@ -24,7 +23,6 @@ export const BookReader: React.FC<BookReaderProps> = ({
   clickPosition,
   onClose
 }) => {
-  const { t } = useTranslation();
   const { language } = useSettingsStore();
   const { isFavorite, addFavorite, removeFavorite } = useFavoritesStore();
   const { startReading } = useReadingHistoryStore();
@@ -64,21 +62,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
   }, [article.id, selectedLevel, startReading, isReading]);
 
   // Get localized content
-  const title = articleService.getLocalizedTitle(article, language);
-  const author = language === 'tr' && article.translations?.tr
-    ? article.translations.tr.author
-    : article.author;
-  const category = language === 'tr' && article.translations?.tr
-    ? article.translations.tr.category
-    : article.category;
   const content = articleService.getLocalizedContent(article, language, selectedLevel);
-  
-  // Get summary for the info page (left page on first opening)
-  const summary = article.summary 
-    ? (language === 'tr' && article.translations?.tr?.summary 
-        ? article.translations.tr.summary[selectedLevel]
-        : article.summary[selectedLevel])
-    : content.substring(0, 400) + '...'; // Fallback to first 400 chars
 
   // Split content into pages (approximately 650 characters per page for perfect fit)
   const charsPerPage = 650;
@@ -114,7 +98,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
   
   const pageBreaks = calculatePageBreaks(content);
   const contentPages = pageBreaks.length - 1;
-  const totalPages = Math.ceil((contentPages + 1) / 2); // +1 for info, then pairs
+  const totalPages = Math.ceil(contentPages / 2); // Content pages divided into pairs
   
   const getPageContent = (contentPageIndex: number) => {
     if (contentPageIndex < 0 || contentPageIndex >= contentPages) return '';
@@ -155,7 +139,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
     if (currentPage < totalPages && !isFlipping) {
       setFlipDirection('next');
       setIsFlipping(true);
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise(resolve => setTimeout(resolve, 900)); // CSS animation duration
       setCurrentPage(currentPage + 1);
       setIsFlipping(false);
       setFlipDirection(null);
@@ -166,16 +150,10 @@ export const BookReader: React.FC<BookReaderProps> = ({
     if (currentPage > 1 && !isFlipping) {
       setFlipDirection('prev');
       setIsFlipping(true);
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise(resolve => setTimeout(resolve, 900)); // CSS animation duration
       setCurrentPage(currentPage - 1);
       setIsFlipping(false);
       setFlipDirection(null);
-    }
-  };
-
-  const handlePageInput = (page: number) => {
-    if (page >= 1 && page <= totalPages && !isFlipping) {
-      setCurrentPage(page);
     }
   };
 
@@ -188,15 +166,25 @@ export const BookReader: React.FC<BookReaderProps> = ({
   };
 
   // Page content logic
-  // currentPage 1: info (left) + content[0] (right)
-  // currentPage 2: content[1] (left) + content[2] (right)
-  // currentPage 3: content[3] (left) + content[4] (right)
-  const leftPageIsInfo = currentPage === 1;
-  const leftContentIndex = leftPageIsInfo ? -1 : (currentPage - 1) * 2 - 1;
-  const rightContentIndex = (currentPage - 1) * 2;
+  // currentPage 1: content[0] (left) + content[1] (right)
+  // currentPage 2: content[2] (left) + content[3] (right)
+  // currentPage 3: content[4] (left) + content[5] (right)
+  const leftContentIndex = (currentPage - 1) * 2;
+  const rightContentIndex = (currentPage - 1) * 2 + 1;
 
-  const leftPageContent = leftPageIsInfo ? summary : getPageContent(leftContentIndex);
+  // Current pages
+  const leftPageContent = getPageContent(leftContentIndex);
   const rightPageContent = getPageContent(rightContentIndex);
+
+  // For "next" flip: right page back shows next spread's left page
+  const nextLeftContentIndex = currentPage * 2;
+  const nextLeftPageContent = nextLeftContentIndex < pageBreaks.length ? getPageContent(nextLeftContentIndex) : '';
+
+  // For "prev" flip: left page back shows previous spread's right page  
+  const prevRightContentIndex = (currentPage - 2) * 2 + 1;
+  const prevRightPageContent = prevRightContentIndex >= 0 && prevRightContentIndex < pageBreaks.length 
+    ? getPageContent(prevRightContentIndex) 
+    : '';
 
   return (
     <AnimatePresence>
@@ -399,129 +387,162 @@ export const BookReader: React.FC<BookReaderProps> = ({
                 }}
               />
 
-              {/* Left Page */}
+              {/* Left Page - With Front and Back */}
               <motion.div
-                className="relative w-[460px] h-[600px] bg-gradient-to-br from-amber-50 to-orange-50 dark:from-neutral-800 dark:to-neutral-900 rounded-l-lg overflow-hidden"
+                className="relative w-[460px] h-[600px] rounded-l-lg overflow-hidden"
                 style={{
                   transformStyle: 'preserve-3d',
                   transformOrigin: 'right center',
-                  boxShadow: 'inset -5px 0 15px rgba(0, 0, 0, 0.1), -10px 0 30px rgba(0, 0, 0, 0.3)'
                 }}
-                animate={
-                  flipDirection === 'next' 
-                    ? {
-                        rotateY: [-5, -180],
-                        transition: { duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }
-                      }
-                    : flipDirection === 'prev'
-                    ? {
-                        rotateY: [-180, -5],
-                        transition: { duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }
-                      }
-                    : { rotateY: -5 }
-                }
+                animate={{
+                  rotateY: flipDirection === 'prev' ? 180 : -5
+                }}
+                transition={{
+                  duration: 0.9,
+                  ease: [0.645, 0.045, 0.355, 1]
+                }}
               >
-                {/* Page texture */}
+                {/* FRONT of Left Page */}
                 <div 
-                  className="absolute inset-0 opacity-30"
+                  className="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-neutral-800 dark:to-neutral-900"
                   style={{
-                    backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.05\' /%3E%3C/svg%3E")',
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(0deg) translateZ(1px)',
+                    boxShadow: 'inset -5px 0 15px rgba(0, 0, 0, 0.1), -10px 0 30px rgba(0, 0, 0, 0.3)'
                   }}
-                />
+                >
+                  {/* Page texture */}
+                  <div 
+                    className="absolute inset-0 opacity-30"
+                    style={{
+                      backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.05\' /%3E%3C/svg%3E")',
+                    }}
+                  />
 
-                <div className="relative h-full py-10 pl-10 pr-14 overflow-hidden">
-                  {currentPage === 1 ? (
-                    // Info Page
-                    <div className="space-y-6">
-                      <div className="border-b-2 border-amber-800/20 dark:border-amber-200/20 pb-4">
-                        <h1 className="text-3xl font-serif font-bold text-gray-900 dark:text-amber-50 mb-3 leading-tight">
-                          {title}
-                        </h1>
-                        <p className="text-base text-gray-700 dark:text-amber-100 font-medium">
-                          {t('book.by')} {author}
-                        </p>
-                      </div>
-                      
-                      <div className="space-y-2 text-gray-700 dark:text-amber-100 text-sm">
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold">{t('book.category')}:</span>
-                          <span>{category}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold">{t('book.published')}:</span>
-                          <span>{new Date(article.date).toLocaleDateString(language)}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold">{t('book.pages')}:</span>
-                          <span>{totalPages}</span>
-                        </div>
-                      </div>
-
-                      <div className="pt-4 border-t-2 border-amber-800/20 dark:border-amber-200/20">
-                        <h2 className="text-xl font-serif font-bold text-gray-900 dark:text-amber-50 mb-2">
-                          {t('book.summary')}
-                        </h2>
-                        <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif">
-                          {summary}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    // Content Page
+                  <div className="relative h-full py-10 pl-10 pr-14 overflow-hidden">
                     <div className="prose dark:prose-invert max-w-none">
                       <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
                         {leftPageContent}
                       </p>
                     </div>
-                  )}
-                  
-                  {/* Page Number */}
-                  <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
-                    {currentPage * 2 - 1}
+                    
+                    {/* Page Number */}
+                    <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
+                      {currentPage * 2 - 1}
+                    </div>
+                  </div>
+                </div>
+
+                {/* BACK of Left Page (shows previous spread's right page) */}
+                <div 
+                  className="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-neutral-800 dark:to-neutral-900"
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg) translateZ(1px)',
+                    boxShadow: 'inset 5px 0 15px rgba(0, 0, 0, 0.1), 10px 0 30px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  {/* Page texture */}
+                  <div 
+                    className="absolute inset-0 opacity-30"
+                    style={{
+                      backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.05\' /%3E%3C/svg%3E")',
+                    }}
+                  />
+
+                  <div className="relative h-full py-10 pl-14 pr-10 overflow-hidden">
+                    <div className="prose dark:prose-invert max-w-none">
+                      <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
+                        {prevRightPageContent}
+                      </p>
+                    </div>
+                    
+                    {/* Page Number */}
+                    <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
+                      {(currentPage - 1) * 2}
+                    </div>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Right Page */}
+              {/* Right Page - With Front and Back */}
               <motion.div
-                className="relative w-[460px] h-[600px] bg-gradient-to-br from-amber-50 to-orange-50 dark:from-neutral-800 dark:to-neutral-900 rounded-r-lg overflow-hidden"
+                className="relative w-[460px] h-[600px] rounded-r-lg overflow-hidden"
                 style={{
                   transformStyle: 'preserve-3d',
                   transformOrigin: 'left center',
-                  boxShadow: 'inset 5px 0 15px rgba(0, 0, 0, 0.1), 10px 0 30px rgba(0, 0, 0, 0.3)'
                 }}
-                animate={
-                  flipDirection === 'next' 
-                    ? {
-                        rotateY: [5, 180],
-                        transition: { duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }
-                      }
-                    : flipDirection === 'prev'
-                    ? {
-                        rotateY: [180, 5],
-                        transition: { duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }
-                      }
-                    : { rotateY: 5 }
-                }
+                animate={{
+                  rotateY: flipDirection === 'next' ? -180 : 5
+                }}
+                transition={{
+                  duration: 0.9,
+                  ease: [0.645, 0.045, 0.355, 1]
+                }}
               >
-                {/* Page texture */}
+                {/* FRONT of Right Page */}
                 <div 
-                  className="absolute inset-0 opacity-30"
+                  className="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-neutral-800 dark:to-neutral-900"
                   style={{
-                    backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.05\' /%3E%3C/svg%3E")',
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(0deg) translateZ(1px)',
+                    boxShadow: 'inset 5px 0 15px rgba(0, 0, 0, 0.1), 10px 0 30px rgba(0, 0, 0, 0.3)'
                   }}
-                />
+                >
+                  {/* Page texture */}
+                  <div 
+                    className="absolute inset-0 opacity-30"
+                    style={{
+                      backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.05\' /%3E%3C/svg%3E")',
+                    }}
+                  />
 
-                <div className="relative h-full py-10 pl-14 pr-10 overflow-hidden">
-                  <div className="prose dark:prose-invert max-w-none">
-                    <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
-                      {rightPageContent}
-                    </p>
+                  <div className="relative h-full py-10 pl-14 pr-10 overflow-hidden">
+                    <div className="prose dark:prose-invert max-w-none">
+                      <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
+                        {rightPageContent}
+                      </p>
+                    </div>
+                    
+                    {/* Page Number */}
+                    <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
+                      {currentPage * 2}
+                    </div>
                   </div>
-                  
-                  {/* Page Number */}
-                  <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
-                    {currentPage * 2}
+                </div>
+
+                {/* BACK of Right Page (shows next spread's left page) */}
+                <div 
+                  className="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-neutral-800 dark:to-neutral-900"
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg) translateZ(1px)',
+                    boxShadow: 'inset -5px 0 15px rgba(0, 0, 0, 0.1), -10px 0 30px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  {/* Page texture */}
+                  <div 
+                    className="absolute inset-0 opacity-30"
+                    style={{
+                      backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' opacity=\'0.05\' /%3E%3C/svg%3E")',
+                    }}
+                  />
+
+                  <div className="relative h-full py-10 pl-10 pr-14 overflow-hidden">
+                    {nextLeftPageContent && (currentPage + 1) * 2 - 1 <= totalPages ? (
+                      <>
+                        <div className="prose dark:prose-invert max-w-none">
+                          <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
+                            {nextLeftPageContent}
+                          </p>
+                        </div>
+                        
+                        {/* Page Number */}
+                        <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
+                          {(currentPage + 1) * 2 - 1}
+                        </div>
+                      </>
+                    ) : null}
                   </div>
                 </div>
               </motion.div>

@@ -26,7 +26,6 @@ export default {
       category: 'Category',
       published: 'Published',
       pages: 'Pages',
-      summary: 'Summary',
       beginner: 'Beginner',
       intermediate: 'Intermediate',
       advanced: 'Advanced',
