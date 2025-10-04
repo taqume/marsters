@@ -1,6 +1,7 @@
 import React from 'react';
 import { Article } from '@models/Article';
 import { Book } from '../Book/Book';
+import { motion } from 'framer-motion';
 
 interface BookshelfProps {
   articles: Article[];
@@ -45,19 +46,26 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
               <div className="books-row pb-6 mb-4">
                 <div className="flex items-end justify-center space-x-7 px-6 pb-4">
                   {shelfBooks.map((article, index) => (
-                    <div
+                    <motion.div
                       key={article.id}
-                      className="animate-fade-in"
-                      style={{
-                        animationDelay: `${index * 100}ms`,
-                        animationFillMode: 'both',
+                      initial={{ opacity: 0, y: 50, rotateY: -30 }}
+                      animate={{ opacity: 1, y: 0, rotateY: 0 }}
+                      transition={{ 
+                        delay: index * 0.1,
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 25
+                      }}
+                      whileHover={{ 
+                        y: -10,
+                        transition: { duration: 0.2 }
                       }}
                     >
                       <Book
                         article={article}
                         onClick={() => onBookSelect(article)}
                       />
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
