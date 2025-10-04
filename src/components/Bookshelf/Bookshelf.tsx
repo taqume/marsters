@@ -49,11 +49,11 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
       {/* Content Container */}
       <div className="relative z-10 py-10 px-6">
         {/* Shelves */}
-        <div className="space-y-16">
+        <div className="space-y-20">
           {shelves.map((shelfBooks, shelfIndex) => (
             <div key={shelfIndex} className="shelf-container relative">
               {/* Modern Shelf Board */}
-              <div className="shelf-board absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-b from-gray-300 via-gray-400 to-gray-500 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 rounded-lg shadow-2xl">
+              <div className="shelf-board absolute bottom-0 -left-8 -right-8 h-4 bg-gradient-to-b from-gray-300 via-gray-400 to-gray-500 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 rounded-lg shadow-2xl">
                 {/* Glass effect on top */}
                 <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                 
@@ -72,8 +72,8 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
               </div>
 
               {/* Books Container */}
-              <div className="books-row pb-5 mb-4">
-                <div className="flex items-end justify-center space-x-5 px-6 pb-3">
+              <div className="books-row pb-6 mb-4">
+                <div className="flex items-end justify-center space-x-7 px-6 pb-4">
                   {shelfBooks.map((article, index) => (
                     <div
                       key={article.id}

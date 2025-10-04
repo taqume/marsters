@@ -20,8 +20,8 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
       className="book-container group cursor-pointer flex-shrink-0 relative"
       style={{
         perspective: '1500px',
-        width: '130px',
-        height: '190px',
+        width: '150px',
+        height: '220px',
       }}
     >
       {/* Glow effect on hover */}
@@ -33,7 +33,7 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
       />
 
       <div 
-        className="book relative transition-all duration-500 ease-out"
+        className="book relative transition-all duration-500 ease-out group-hover:scale-110"
         style={{
           width: '100%',
           height: '100%',
@@ -146,7 +146,7 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
       </div>
 
       {/* Enhanced Hover Tooltip */}
-      <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-2 z-20 pointer-events-none">
+      <div className="absolute -bottom-24 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-2 z-20 pointer-events-none">
         <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-gray-700 backdrop-blur-sm">
           <div className="font-bold text-sm mb-1">{article.category}</div>
           <div className="text-gray-300 text-xs flex items-center space-x-1">
