@@ -24,7 +24,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
       <div className="relative">
         {/* Search icon */}
         <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-          <Search className={`w-5 h-5 transition-all duration-300 ${isFocused ? 'text-purple-500 scale-110' : 'text-gray-400'}`} />
+          <Search className={`w-5 h-5 transition-all duration-300 ${isFocused ? 'text-purple-500 scale-110' : 'text-gray-800 dark:text-white'}`} />
         </div>
 
         {/* Magic sparkles when typing */}
@@ -43,7 +43,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
           onBlur={() => setIsFocused(false)}
           placeholder={t('header.search')}
           className={`
-            w-full pl-14 pr-14 py-4 
+            w-full pl-14 pr-14 py-3 
             bg-white/90 dark:bg-gray-800/90 
             backdrop-blur-xl
             border-2 transition-all duration-300

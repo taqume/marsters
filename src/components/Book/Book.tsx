@@ -1,5 +1,5 @@
 import { Article } from '@models/Article';
-import { Sparkles, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 interface BookProps {
   article: Article;
@@ -53,16 +53,6 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
             boxShadow: '10px 10px 30px rgba(0, 0, 0, 0.4), inset -3px 0 8px rgba(0, 0, 0, 0.2)',
           }}
         >
-          {/* Category Badge */}
-          <div className="absolute top-2 right-2">
-            <div className="bg-white/30 backdrop-blur-sm px-2 py-1 rounded-full border border-white/40 flex items-center space-x-1">
-              <Sparkles className="w-3 h-3 text-white" />
-              <span className="text-[8px] text-white font-bold uppercase tracking-wide">
-                {article.category.split(' ')[0]}
-              </span>
-            </div>
-          </div>
-
           {/* Decorative pattern overlay */}
           <div 
             className="absolute inset-0 opacity-10"
