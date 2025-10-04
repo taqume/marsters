@@ -45,8 +45,6 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
               {/* Logo Container */}
               <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-2xl transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border border-blue-400/30">
                 <Rocket className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
-                {/* Sparkle effect */}
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-300 rounded-full animate-ping" />
               </div>
             </div>
             
