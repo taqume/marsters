@@ -1,4 +1,4 @@
-import { Article, Language } from '@models/Article';
+import { Article, Language, ArticleContent } from '@models/Article';
 import articlesData from '@data/articles.json';
 
 /**
@@ -141,7 +141,8 @@ export class ArticleService {
       : article.content;
 
     // Return content based on difficulty level, fallback to beginner if not found
-    return (content as any)[difficulty] || content.beginner;
+    const difficultyKey = difficulty as keyof ArticleContent;
+    return content[difficultyKey] || content.beginner;
   }
 }
 

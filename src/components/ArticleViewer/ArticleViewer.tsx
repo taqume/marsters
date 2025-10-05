@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, HeartOff, ExternalLink, BookOpen, Clock, User, Calendar, Sparkles, ChevronLeft, ChevronRight, Book } from 'lucide-react';
+import { X, Heart, HeartOff, User, Calendar, ChevronLeft, ChevronRight, Book } from 'lucide-react';
 import { Article, DifficultyLevel, Language } from '@models/Article';
 import { articleService } from '@services/ArticleService';
 import { useSettingsStore } from '@stores/settingsStore';
@@ -26,7 +26,6 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
   
   const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel>(DifficultyLevel.BEGINNER);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [isPageTurning, setIsPageTurning] = useState(false);
   const [pageDirection, setPageDirection] = useState<'next' | 'prev' | null>(null);
   const isReading = true;
@@ -80,13 +79,6 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
     setCurrentPage(1);
   }, [selectedLevel]);
 
-  // Calculate scroll progress
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-    const progress = (target.scrollTop / (target.scrollHeight - target.clientHeight)) * 100;
-    setScrollProgress(progress);
-  };
-
   const handlePreviousPage = async () => {
     if (currentPage > 1 && !isPageTurning) {
       setPageDirection('prev');
@@ -126,11 +118,13 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
 
   const levelColors = {
     [DifficultyLevel.BEGINNER]: 'from-green-500 to-emerald-500',
+    [DifficultyLevel.INTERMEDIATE]: 'from-blue-500 to-cyan-500',
     [DifficultyLevel.ADVANCED]: 'from-purple-500 to-pink-500',
   };
 
   const levelIcons = {
     [DifficultyLevel.BEGINNER]: '🌱',
+    [DifficultyLevel.INTERMEDIATE]: '📚',
     [DifficultyLevel.ADVANCED]: '⚡',
   };
 

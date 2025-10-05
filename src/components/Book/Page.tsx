@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { Text } from '@react-three/drei';
-import { useSpring, animated, SpringValue } from '@react-spring/three';
+import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
-import { useThree } from '@react-three/fiber';
 
 interface PageProps {
   content: string;
@@ -127,7 +126,7 @@ export const Page: React.FC<PageProps> = ({
         <meshBasicMaterial
           color="#000000"
           transparent
-          opacity={springs.rotationY.to(r => 0.3 * Math.abs(Math.sin(r)))}
+          opacity={0.2}
         />
       </animated.mesh>
 

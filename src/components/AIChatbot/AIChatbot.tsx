@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Trash2, Sparkles, Volume2, VolumeX } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useChatStore, ChatMessage } from '@stores/chatStore';
+import { useChatStore } from '@stores/chatStore';
 import { useSettingsStore } from '@stores/settingsStore';
 import { geminiService } from '@services/GeminiService';
 import { PromptService } from '@services/PromptService';
@@ -18,12 +17,10 @@ interface AIChatbotProps {
  * Floating astronaut assistant with context-aware responses
  */
 export const AIChatbot: React.FC<AIChatbotProps> = ({ currentArticle }) => {
-  const { t } = useTranslation();
   const { language } = useSettingsStore();
   const {
     isChatOpen,
     isTyping,
-    currentArticleId,
     setCurrentArticle,
     addMessage,
     clearHistory,
@@ -109,16 +106,16 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ currentArticle }) => {
         : PromptService.getGeneralModePrompt(language);
 
       // Prepare message history for Gemini
-      const geminiMessages = messages
+      const geminiMessages: Array<{ role: 'user' | 'model'; parts: { text: string }[] }> = messages
         .slice(-6) // Last 3 exchanges (6 messages)
         .map(msg => ({
-          role: msg.role === 'user' ? 'user' : 'model',
+          role: (msg.role === 'user' ? 'user' : 'model') as 'user' | 'model',
           parts: [{ text: msg.content }],
         }));
 
       // Add current message
       geminiMessages.push({
-        role: 'user',
+        role: 'user' as const,
         parts: [{ text: trimmedText }],
       });
 
