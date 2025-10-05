@@ -7,13 +7,20 @@ import { SearchBar } from '@components/SearchBar/SearchBar';
 interface HeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  searchInContent: boolean;
+  onSearchInContentChange: (value: boolean) => void;
 }
 
 /**
  * NASA Space-Themed Header Component
  * Mission control inspired design with space aesthetics
  */
-export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) => {
+export const Header: React.FC<HeaderProps> = ({ 
+  searchQuery, 
+  onSearchChange,
+  searchInContent,
+  onSearchInContentChange
+}) => {
   const { t, i18n } = useTranslation();
   const { theme, language, toggleTheme, setLanguage } = useSettingsStore();
 
@@ -58,7 +65,12 @@ export const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) =
 
           {/* Search Bar - Center */}
           <div className="absolute left-1/2 -translate-x-1/2 w-[500px]">
-            <SearchBar value={searchQuery} onChange={onSearchChange} />
+            <SearchBar 
+              value={searchQuery} 
+              onChange={onSearchChange}
+              searchInContent={searchInContent}
+              onSearchInContentChange={onSearchInContentChange}
+            />
           </div>
 
           {/* Controls - Space Mission Style */}

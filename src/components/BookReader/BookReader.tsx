@@ -68,9 +68,6 @@ export const BookReader: React.FC<BookReaderProps> = ({
   const author = language === 'tr' && article.translations?.tr?.author
     ? article.translations.tr.author
     : article.author;
-  const category = language === 'tr' && article.translations?.tr?.category
-    ? article.translations.tr.category
-    : article.category;
   const content = articleService.getLocalizedContent(article, language, selectedLevel);
 
   // Split content into pages (approximately 650 characters per page for perfect fit)
@@ -223,16 +220,6 @@ export const BookReader: React.FC<BookReaderProps> = ({
               }`}
             >
               Beginner
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.INTERMEDIATE); }}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all backdrop-blur-sm ${
-                selectedLevel === DifficultyLevel.INTERMEDIATE
-                  ? 'bg-orange-500/90 text-white shadow-lg'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10'
-              }`}
-            >
-              Intermediate
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.ADVANCED); }}
@@ -443,10 +430,6 @@ export const BookReader: React.FC<BookReaderProps> = ({
                         </div>
                         
                         <div className="space-y-3 text-gray-700 dark:text-amber-100 text-sm">
-                          <div className="flex items-start gap-2">
-                            <span className="font-semibold min-w-[80px]">{t('book.category')}:</span>
-                            <span className="flex-1">{category}</span>
-                          </div>
                           <div className="flex items-start gap-2">
                             <span className="font-semibold min-w-[80px]">{t('book.published')}:</span>
                             <span className="flex-1">{new Date(article.date).toLocaleDateString(language, { year: 'numeric', month: 'long', day: 'numeric' })}</span>

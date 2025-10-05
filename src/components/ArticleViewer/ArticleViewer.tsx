@@ -126,13 +126,11 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
 
   const levelColors = {
     [DifficultyLevel.BEGINNER]: 'from-green-500 to-emerald-500',
-    [DifficultyLevel.INTERMEDIATE]: 'from-blue-500 to-cyan-500',
     [DifficultyLevel.ADVANCED]: 'from-purple-500 to-pink-500',
   };
 
   const levelIcons = {
     [DifficultyLevel.BEGINNER]: '🌱',
-    [DifficultyLevel.INTERMEDIATE]: '🚀',
     [DifficultyLevel.ADVANCED]: '⚡',
   };
 
@@ -250,7 +248,7 @@ export const ArticleViewer: React.FC<ArticleViewerProps> = ({ article, onClose }
             >
               <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Seviye:</span>
               <div className="flex space-x-1">
-                {[DifficultyLevel.BEGINNER, DifficultyLevel.INTERMEDIATE, DifficultyLevel.ADVANCED].map((level, index) => (
+                {[DifficultyLevel.BEGINNER, DifficultyLevel.ADVANCED].map((level, index) => (
                   <motion.button
                     key={level}
                     onClick={() => setSelectedLevel(level)}

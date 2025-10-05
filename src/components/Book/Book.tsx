@@ -25,7 +25,7 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
     if (length <= 50) return '18px';      // Orta uzunluk
     if (length <= 70) return '16px';      // Uzun başlıklar
     if (length <= 90) return '14px';      // Çok uzun
-    return '12px';                         // En uzun başlıklar
+    return '11px';                         // En uzun başlıklar
   };
   
   // Dynamic line height based on font size

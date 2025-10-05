@@ -8,7 +8,6 @@ export default {
     },
     difficulty: {
       beginner: 'Beginner',
-      intermediate: 'Intermediate',
       advanced: 'Advanced',
     },
     article: {
@@ -27,7 +26,6 @@ export default {
       published: 'Published',
       pages: 'Pages',
       beginner: 'Beginner',
-      intermediate: 'Intermediate',
       advanced: 'Advanced',
       completed: 'completed',
     },
@@ -43,7 +41,6 @@ export default {
       hours: 'hours',
       readBy: {
         beginner: 'Read Beginner',
-        intermediate: 'Read Intermediate',
         advanced: 'Read Advanced',
       },
     },

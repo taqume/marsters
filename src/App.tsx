@@ -16,6 +16,7 @@ function App() {
   const { theme, language } = useSettingsStore();
   const { i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchInContent, setSearchInContent] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [clickPosition, setClickPosition] = useState<{ x: number; y: number } | null>(null);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
@@ -37,10 +38,12 @@ function App() {
 
   // Filter articles based on search
   useEffect(() => {
-    const articles = articleService.searchArticles(searchQuery, language);
+    const articles = searchInContent
+      ? articleService.searchArticlesWithContent(searchQuery, language)
+      : articleService.searchArticles(searchQuery, language);
     setFilteredArticles(articles);
     setCurrentPage(1); // Reset to first page on new search
-  }, [searchQuery, language]);
+  }, [searchQuery, language, searchInContent]);
 
   // Get paginated articles
   const paginatedData = articleService.getPaginatedArticles(filteredArticles, currentPage);
@@ -363,7 +366,12 @@ function App() {
       </div>
       
       {/* Header with Search */}
-      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <Header 
+        searchQuery={searchQuery} 
+        onSearchChange={setSearchQuery}
+        searchInContent={searchInContent}
+        onSearchInContentChange={setSearchInContent}
+      />
 
       {/* Main Content */}
       <main className="pt-32 pb-12 px-6">

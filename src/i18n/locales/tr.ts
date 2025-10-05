@@ -8,7 +8,6 @@ export default {
     },
     difficulty: {
       beginner: 'Başlangıç',
-      intermediate: 'Orta',
       advanced: 'Gelişmiş',
     },
     article: {
@@ -27,7 +26,6 @@ export default {
       published: 'Yayınlanma',
       pages: 'Sayfa',
       beginner: 'Başlangıç',
-      intermediate: 'Orta',
       advanced: 'Gelişmiş',
       completed: 'tamamlandı',
     },
@@ -43,7 +41,6 @@ export default {
       hours: 'saat',
       readBy: {
         beginner: 'Başlangıç Okundu',
-        intermediate: 'Orta Okundu',
         advanced: 'Gelişmiş Okundu',
       },
     },

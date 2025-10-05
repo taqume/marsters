@@ -47,6 +47,48 @@ export class ArticleService {
   }
 
   /**
+   * Search articles by title and content (beginner + advanced)
+   */
+  searchArticlesWithContent(query: string, language: Language = Language.EN): Article[] {
+    if (!query.trim()) {
+      return this.articles;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    
+    return this.articles.filter((article) => {
+      // Search in title
+      let titleMatch = false;
+      if (language === Language.TR && article.translations?.tr) {
+        titleMatch = article.translations.tr.title.toLowerCase().includes(lowerQuery);
+      } else {
+        titleMatch = article.title.toLowerCase().includes(lowerQuery);
+      }
+
+      // If title matches, return immediately
+      if (titleMatch) {
+        return true;
+      }
+
+      // Search in content (beginner + advanced)
+      let contentMatch = false;
+      
+      if (language === Language.TR && article.translations?.tr?.content) {
+        const content = article.translations.tr.content;
+        const beginnerContent = (content.beginner || '').toLowerCase();
+        const advancedContent = (content.advanced || '').toLowerCase();
+        contentMatch = beginnerContent.includes(lowerQuery) || advancedContent.includes(lowerQuery);
+      } else if (article.content) {
+        const beginnerContent = (article.content.beginner || '').toLowerCase();
+        const advancedContent = (article.content.advanced || '').toLowerCase();
+        contentMatch = beginnerContent.includes(lowerQuery) || advancedContent.includes(lowerQuery);
+      }
+
+      return contentMatch;
+    });
+  }
+
+  /**
    * Get paginated articles
    * @param page - Current page (1-indexed)
    * @param articlesPerPage - Number of articles per page (default: 24)
