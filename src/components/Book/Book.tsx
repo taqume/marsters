@@ -10,16 +10,31 @@ interface BookProps {
 
 /**
  * Realistic 3D Book Component
- * Features: Thick cover, visible pages, realistic depth
+ * Features: Thick cover, visible pages, realistic depth, dynamic title sizing
  */
 export const Book: React.FC<BookProps> = ({ article, onClick }) => {
   const { language } = useSettingsStore();
   
-  // Get localized title and author
+  // Get localized title
   const localizedTitle = articleService.getLocalizedTitle(article, language);
-  const localizedAuthor = language === 'tr' && article.translations?.tr
-    ? article.translations.tr.author
-    : article.author;
+  
+  // Dynamic font size based on title length - BÜYÜTÜLMÜŞ
+  const getTitleFontSize = (title: string): string => {
+    const length = title.length;
+    if (length <= 30) return '20px';      // Kısa başlıklar için daha büyük
+    if (length <= 50) return '18px';      // Orta uzunluk
+    if (length <= 70) return '16px';      // Uzun başlıklar
+    if (length <= 90) return '14px';      // Çok uzun
+    return '12px';                         // En uzun başlıklar
+  };
+  
+  // Dynamic line height based on font size
+  const getTitleLineHeight = (title: string): string => {
+    const length = title.length;
+    if (length <= 30) return '1.35';
+    if (length <= 50) return '1.3';
+    return '1.25';
+  };
   return (
     <motion.div
       onClick={onClick}
@@ -132,25 +147,36 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
             }}
           />
 
-          {/* Content - Encyclopedia Style */}
-          <div className="relative h-full flex flex-col justify-between p-5">
-            {/* Title */}
-            <div className="font-serif font-bold text-sm leading-tight pt-8" style={{ color: '#D4AF37', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-              {localizedTitle}
+          {/* Content - Clean & Minimalist */}
+          <div className="relative h-full flex flex-col justify-between px-4 py-4">
+            {/* Title Area - Expanded with more space */}
+            <div 
+              className="font-serif font-bold pt-2 overflow-hidden"
+              style={{ 
+                color: '#D4AF37', 
+                textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                fontSize: getTitleFontSize(localizedTitle),
+                lineHeight: getTitleLineHeight(localizedTitle),
+                height: '175px',  // Daha geniş alan (140px -> 175px)
+                display: 'flex',
+                alignItems: 'flex-start',
+              }}
+            >
+              <div className="line-clamp-8 w-full">
+                {localizedTitle}
+              </div>
             </div>
             
-            {/* Bottom section */}
-            <div className="space-y-3 pb-2">
-              {/* Author */}
-              <div className="text-xs font-medium" style={{ color: '#C5A572', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-                {localizedAuthor}
-              </div>
-              
-              {/* Book ID - Centered at bottom */}
-              <div className="flex justify-center">
-                <div className="text-2xl font-serif font-bold tracking-wider" style={{ color: '#FFD700', textShadow: '0 2px 6px rgba(212, 175, 55, 0.6), 0 0 10px rgba(255, 215, 0, 0.3)' }}>
-                  {article.id}
-                </div>
+            {/* Book ID - Centered at bottom */}
+            <div className="flex justify-center pb-2">
+              <div 
+                className="text-2xl font-serif font-bold tracking-wider" 
+                style={{ 
+                  color: '#FFD700', 
+                  textShadow: '0 2px 6px rgba(212, 175, 55, 0.6), 0 0 10px rgba(255, 215, 0, 0.3)' 
+                }}
+              >
+                {article.id}
               </div>
             </div>
           </div>
