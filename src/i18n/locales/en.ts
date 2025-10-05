@@ -52,5 +52,17 @@ export default {
       light: 'Light Mode',
       dark: 'Dark Mode',
     },
+    chat: {
+      title: 'Haldun',
+      generalMode: 'General Mode',
+      articleMode: 'Article Mode',
+      placeholder: 'Type your message...',
+      clearHistory: 'Clear History',
+      clearConfirm: 'Are you sure you want to clear chat history?',
+      welcome: 'Hello! How can I help you?',
+      mute: 'Mute',
+      unmute: 'Unmute',
+      error: 'Sorry, an error occurred. Please try again.',
+    },
   },
 };

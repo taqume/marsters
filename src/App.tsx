@@ -6,6 +6,7 @@ import { useSettingsStore } from '@stores/settingsStore';
 import { Header } from '@components/Header/Header';
 import { Bookshelf } from '@components/Bookshelf/Bookshelf';
 import { BookReader } from '@components/BookReader/BookReader';
+import { AIChatbot } from '@components/AIChatbot/AIChatbot';
 import './i18n/config';
 
 /**
@@ -399,6 +400,9 @@ function App() {
           onClose={() => setSelectedArticle(null)}
         />
       )}
+
+      {/* AI Chatbot - Always visible */}
+      <AIChatbot currentArticle={selectedArticle} />
     </div>
   );
 }

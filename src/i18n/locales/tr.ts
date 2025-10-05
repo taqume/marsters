@@ -52,5 +52,17 @@ export default {
       light: 'Açık Mod',
       dark: 'Koyu Mod',
     },
+    chat: {
+      title: 'Haldun',
+      generalMode: 'Genel Mod',
+      articleMode: 'Makale Modu',
+      placeholder: 'Mesajınızı yazın...',
+      clearHistory: 'Geçmişi Temizle',
+      clearConfirm: 'Sohbet geçmişini temizlemek istediğinizden emin misiniz?',
+      welcome: 'Merhaba! Size nasıl yardımcı olabilirim?',
+      mute: 'Sesi Kapat',
+      unmute: 'Sesi Aç',
+      error: 'Üzgünüm, şu anda bir hata oluştu. Lütfen tekrar deneyin.',
+    },
   },
 };
