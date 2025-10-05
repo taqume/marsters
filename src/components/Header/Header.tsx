@@ -9,6 +9,8 @@ interface HeaderProps {
   onSearchChange: (query: string) => void;
   searchInContent: boolean;
   onSearchInContentChange: (value: boolean) => void;
+  searchByAuthor: boolean;
+  onSearchByAuthorChange: (value: boolean) => void;
 }
 
 /**
@@ -19,7 +21,9 @@ export const Header: React.FC<HeaderProps> = ({
   searchQuery, 
   onSearchChange,
   searchInContent,
-  onSearchInContentChange
+  onSearchInContentChange,
+  searchByAuthor,
+  onSearchByAuthorChange
 }) => {
   const { t, i18n } = useTranslation();
   const { theme, language, toggleTheme, setLanguage } = useSettingsStore();
@@ -59,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 dark:from-blue-400 dark:via-purple-400 dark:to-blue-500 bg-clip-text text-transparent drop-shadow-sm">
                 {t('header.title')}
               </h1>
-              <p className="text-[10px] text-blue-600 dark:text-blue-400 font-mono tracking-wider uppercase">Explore • Learn • Discover</p>
+              <p className="text-[10px] text-blue-600 dark:text-blue-400 font-mono tracking-wider uppercase">{t('header.tagline')}</p>
             </div>
           </div>
 
@@ -70,6 +74,8 @@ export const Header: React.FC<HeaderProps> = ({
               onChange={onSearchChange}
               searchInContent={searchInContent}
               onSearchInContentChange={onSearchInContentChange}
+              searchByAuthor={searchByAuthor}
+              onSearchByAuthorChange={onSearchByAuthorChange}
             />
           </div>
 

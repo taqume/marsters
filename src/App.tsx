@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Article } from '@models/Article';
 import { articleService } from '@services/ArticleService';
 import { useSettingsStore } from '@stores/settingsStore';
+import { useFavoritesStore } from '@stores/favoritesStore';
 import { Header } from '@components/Header/Header';
 import { Bookshelf } from '@components/Bookshelf/Bookshelf';
 import { BookReader } from '@components/BookReader/BookReader';
@@ -15,13 +16,19 @@ import './i18n/config';
  */
 function App() {
   const { theme, language } = useSettingsStore();
+  const { getFavorites } = useFavoritesStore();
   const { i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchInContent, setSearchInContent] = useState(false);
+  const [searchByAuthor, setSearchByAuthor] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [clickPosition, setClickPosition] = useState<{ x: number; y: number } | null>(null);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Get favorite articles
+  const favoriteIds = getFavorites();
+  const favoriteArticles = articleService.getArticlesByIds(favoriteIds);
 
   // Apply theme to document
   useEffect(() => {
@@ -35,16 +42,28 @@ function App() {
   // Sync language
   useEffect(() => {
     i18n.changeLanguage(language);
+    // Update document title based on language
+    document.title = i18n.t('header.title');
   }, [language, i18n]);
 
   // Filter articles based on search
   useEffect(() => {
-    const articles = searchInContent
-      ? articleService.searchArticlesWithContent(searchQuery, language)
-      : articleService.searchArticles(searchQuery, language);
+    let articles: Article[];
+    
+    if (searchByAuthor) {
+      // Search by author
+      articles = articleService.searchArticlesByAuthor(searchQuery, language);
+    } else if (searchInContent) {
+      // Search in content
+      articles = articleService.searchArticlesWithContent(searchQuery, language);
+    } else {
+      // Default: search by title
+      articles = articleService.searchArticles(searchQuery, language);
+    }
+    
     setFilteredArticles(articles);
     setCurrentPage(1); // Reset to first page on new search
-  }, [searchQuery, language, searchInContent]);
+  }, [searchQuery, language, searchInContent, searchByAuthor]);
 
   // Get paginated articles
   const paginatedData = articleService.getPaginatedArticles(filteredArticles, currentPage);
@@ -372,6 +391,8 @@ function App() {
         onSearchChange={setSearchQuery}
         searchInContent={searchInContent}
         onSearchInContentChange={setSearchInContent}
+        searchByAuthor={searchByAuthor}
+        onSearchByAuthorChange={setSearchByAuthor}
       />
 
       {/* Main Content */}
@@ -380,6 +401,7 @@ function App() {
           {/* Bookshelf with Pagination */}
           <Bookshelf
             articles={paginatedData.articles}
+            favoriteArticles={favoriteArticles}
             onBookSelect={(article, position) => {
               setSelectedArticle(article);
               setClickPosition(position);

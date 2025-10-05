@@ -89,6 +89,24 @@ export class ArticleService {
   }
 
   /**
+   * Search articles by author name
+   */
+  searchArticlesByAuthor(query: string, language: Language = Language.EN): Article[] {
+    if (!query.trim()) {
+      return this.articles;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    
+    return this.articles.filter((article) => {
+      if (language === Language.TR && article.translations?.tr) {
+        return article.translations.tr.author.toLowerCase().includes(lowerQuery);
+      }
+      return article.author.toLowerCase().includes(lowerQuery);
+    });
+  }
+
+  /**
    * Get paginated articles
    * @param page - Current page (1-indexed)
    * @param articlesPerPage - Number of articles per page (default: 24)

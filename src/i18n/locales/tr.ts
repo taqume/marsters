@@ -2,9 +2,14 @@ export default {
   translation: {
     header: {
       title: 'NASA Biyoloji Kütüphanesi',
+      tagline: 'Oku • Öğren • Keşfet',
       search: 'Makale ara...',
       statistics: 'İstatistikler',
       favorites: 'Favoriler',
+      searchByAuthorOn: 'Yazara Göre Ara - Açık',
+      searchByAuthorOff: 'Yazara Göre Ara - Kapalı',
+      searchInContentOn: 'İçerikte Ara - Açık',
+      searchInContentOff: 'İçerikte Ara - Kapalı',
     },
     difficulty: {
       beginner: 'Başlangıç',
@@ -47,6 +52,12 @@ export default {
     bookshelf: {
       noResults: 'Makale bulunamadı',
       loading: 'Kütüphane yükleniyor...',
+      favoriteCollection: 'Favori Koleksiyonu',
+    },
+    pagination: {
+      previous: 'Önceki',
+      next: 'Sonraki',
+      page: 'Sayfa',
     },
     theme: {
       light: 'Açık Mod',

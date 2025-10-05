@@ -2,9 +2,14 @@ export default {
   translation: {
     header: {
       title: 'NASA Biology Library',
+      tagline: 'Read • Learn • Explore',
       search: 'Search articles...',
       statistics: 'Statistics',
       favorites: 'Favorites',
+      searchByAuthorOn: 'Search by Author - On',
+      searchByAuthorOff: 'Search by Author - Off',
+      searchInContentOn: 'Search in Content - On',
+      searchInContentOff: 'Search in Content - Off',
     },
     difficulty: {
       beginner: 'Beginner',
@@ -47,6 +52,12 @@ export default {
     bookshelf: {
       noResults: 'No articles found',
       loading: 'Loading library...',
+      favoriteCollection: 'Favorite Collection',
+    },
+    pagination: {
+      previous: 'Previous',
+      next: 'Next',
+      page: 'Page',
     },
     theme: {
       light: 'Light Mode',

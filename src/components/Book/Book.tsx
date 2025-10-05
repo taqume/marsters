@@ -6,13 +6,14 @@ import { articleService } from '@services/ArticleService';
 interface BookProps {
   article: Article;
   onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
+  isFavorite?: boolean; // Favori olup olmadığını gösterir
 }
 
 /**
  * Realistic 3D Book Component
  * Features: Thick cover, visible pages, realistic depth, dynamic title sizing
  */
-export const Book: React.FC<BookProps> = ({ article, onClick }) => {
+export const Book: React.FC<BookProps> = ({ article, onClick, isFavorite = false }) => {
   const { language } = useSettingsStore();
   
   // Get localized title
@@ -56,9 +57,50 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
         transition: { duration: 0.3 }
       }}
     >
+      {/* Favorite Star Badge - Floating above book */}
+      {isFavorite && (
+        <motion.div
+          className="absolute -top-6 -right-3 z-50"
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ 
+            type: 'spring',
+            stiffness: 260,
+            damping: 20,
+            delay: 0.2
+          }}
+        >
+          <motion.div
+            className="relative"
+            animate={{ 
+              rotate: [0, -10, 10, -10, 0],
+              scale: [1, 1.15, 1, 1.15, 1]
+            }}
+            transition={{ 
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            {/* Golden glow effect */}
+            <div className="absolute inset-0 blur-xl bg-yellow-400/60 rounded-full scale-150" />
+            
+            {/* Star icon */}
+            <div className="relative text-5xl drop-shadow-2xl" style={{
+              filter: 'drop-shadow(0 0 8px rgba(251, 191, 36, 0.8)) drop-shadow(0 0 12px rgba(234, 179, 8, 0.6))'
+            }}>
+              ⭐
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
       {/* Book Shadow */}
       <div 
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140px] h-3 bg-black/30 dark:bg-black/50 blur-lg rounded-full transition-all duration-300 group-hover:w-[120px] group-hover:opacity-60"
+        style={isFavorite ? {
+          boxShadow: '0 0 20px rgba(251, 191, 36, 0.4)'
+        } : {}}
       />
 
       <div 
@@ -75,12 +117,21 @@ export const Book: React.FC<BookProps> = ({ article, onClick }) => {
           className="book-cover absolute inset-0 rounded-r-md overflow-hidden"
           style={{
             backgroundColor: '#0d0d15',
-            backgroundImage: 'linear-gradient(135deg, #08080c 0%, #0d0d15 50%, #12121d 100%)',
-            boxShadow: `
-              8px 8px 20px rgba(0, 0, 0, 0.8),
-              inset -5px 0 15px rgba(0, 0, 0, 0.5),
-              inset 2px 2px 8px rgba(255, 215, 0, 0.08)
-            `,
+            backgroundImage: isFavorite 
+              ? 'linear-gradient(135deg, #1a1408 0%, #2d1f0f 50%, #1a1408 100%)'
+              : 'linear-gradient(135deg, #08080c 0%, #0d0d15 50%, #12121d 100%)',
+            boxShadow: isFavorite
+              ? `
+                8px 8px 20px rgba(251, 191, 36, 0.3),
+                inset -5px 0 15px rgba(0, 0, 0, 0.5),
+                inset 2px 2px 8px rgba(255, 215, 0, 0.15),
+                0 0 30px rgba(251, 191, 36, 0.2)
+              `
+              : `
+                8px 8px 20px rgba(0, 0, 0, 0.8),
+                inset -5px 0 15px rgba(0, 0, 0, 0.5),
+                inset 2px 2px 8px rgba(255, 215, 0, 0.08)
+              `,
             transform: 'translateZ(15px)',
           }}
         >

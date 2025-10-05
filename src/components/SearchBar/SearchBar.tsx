@@ -1,4 +1,4 @@
-import { Search, Satellite, FileText } from 'lucide-react';
+import { Search, Satellite, FileText, UserCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 
@@ -7,6 +7,8 @@ interface SearchBarProps {
   onChange: (value: string) => void;
   searchInContent: boolean;
   onSearchInContentChange: (value: boolean) => void;
+  searchByAuthor: boolean;
+  onSearchByAuthorChange: (value: boolean) => void;
 }
 
 /**
@@ -18,10 +20,36 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   value, 
   onChange, 
   searchInContent, 
-  onSearchInContentChange 
+  onSearchInContentChange,
+  searchByAuthor,
+  onSearchByAuthorChange
 }) => {
   const { t } = useTranslation();
   const [isFocused, setIsFocused] = useState(false);
+
+  // Handle Author Search toggle - deactivate Content Search if Author is activated
+  const handleAuthorSearchToggle = () => {
+    if (!searchByAuthor) {
+      // Activating author search - deactivate content search
+      onSearchInContentChange(false);
+      onSearchByAuthorChange(true);
+    } else {
+      // Deactivating author search
+      onSearchByAuthorChange(false);
+    }
+  };
+
+  // Handle Content Search toggle - deactivate Author Search if Content is activated
+  const handleContentSearchToggle = () => {
+    if (!searchInContent) {
+      // Activating content search - deactivate author search
+      onSearchByAuthorChange(false);
+      onSearchInContentChange(true);
+    } else {
+      // Deactivating content search
+      onSearchInContentChange(false);
+    }
+  };
 
   return (
     <div className="relative w-full group">
@@ -39,15 +67,52 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
         {/* Satellite scanning icon when typing */}
         {value && (
-          <div className="absolute inset-y-0 right-24 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 right-32 flex items-center pointer-events-none">
             <Satellite className="w-4 h-4 text-blue-500 dark:text-blue-400 animate-pulse" />
           </div>
         )}
 
-        {/* Content Search Toggle Button */}
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center z-20">
+        {/* Toggle Buttons Container */}
+        <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-2 z-20">
+          {/* Author Search Toggle Button */}
           <button
-            onClick={() => onSearchInContentChange(!searchInContent)}
+            onClick={handleAuthorSearchToggle}
+            className={`
+              relative p-2.5 rounded-xl transition-all duration-300
+              backdrop-blur-md z-20
+              ${searchByAuthor
+                ? 'bg-gradient-to-r from-amber-500/90 to-orange-500/90 text-white shadow-lg shadow-amber-500/30'
+                : 'bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-400 hover:bg-white/90 dark:hover:bg-gray-700/90'
+              }
+              border-2 ${searchByAuthor 
+                ? 'border-amber-400/50 dark:border-amber-500/50' 
+                : 'border-gray-300/50 dark:border-gray-600/50'
+              }
+              hover:scale-105 active:scale-95
+              group/btn
+            `}
+            title={searchByAuthor ? t('header.searchByAuthorOn') : t('header.searchByAuthorOff')}
+          >
+            {/* Icon with transition */}
+            <div className="relative w-5 h-5">
+              <UserCircle 
+                className={`w-5 h-5 transition-all duration-300 ${
+                  searchByAuthor 
+                    ? 'opacity-100 scale-100' 
+                    : 'opacity-40 scale-95'
+                }`}
+              />
+            </div>
+
+            {/* Pulse effect when active */}
+            {searchByAuthor && (
+              <div className="absolute inset-0 rounded-xl bg-amber-400/30 animate-ping" />
+            )}
+          </button>
+
+          {/* Content Search Toggle Button */}
+          <button
+            onClick={handleContentSearchToggle}
             className={`
               relative p-2.5 rounded-xl transition-all duration-300
               backdrop-blur-md z-20
@@ -62,7 +127,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               hover:scale-105 active:scale-95
               group/btn
             `}
-            title={searchInContent ? 'İçerikte Ara - Açık' : 'İçerikte Ara - Kapalı'}
+            title={searchInContent ? t('header.searchInContentOn') : t('header.searchInContentOff')}
           >
             {/* Icon with transition */}
             <div className="relative w-5 h-5">
@@ -91,7 +156,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onBlur={() => setIsFocused(false)}
           placeholder={t('header.search')}
           className={`
-            w-full pl-14 pr-20 py-3 
+            w-full pl-14 pr-32 py-3 
             bg-white/95 dark:bg-gray-900/95 
             backdrop-blur-xl
             border-2 transition-all duration-300
