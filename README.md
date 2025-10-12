@@ -1,226 +1,112 @@
-# NASA Biology Library 🧬
+# NASA Biology Library
 
-An interactive 3D web application for exploring NASA biology articles with multi-language support and adaptive content difficulty levels.
+An immersive 3D web application for exploring NASA biology articles with multi-language support and adaptive content difficulty levels.
 
-## 🚀 Features
+## About
 
-### Core Features
-- **3D Interactive Bookshelf**: Browse articles as books on a virtual shelf using Three.js
-- **Smart Search**: Real-time search and filtering of articles
-- **Multi-Level Content**: Read articles at different difficulty levels:
-  - Original (Full article)
-  - Beginner (Simplified)
-  - Intermediate (Moderate complexity)
-  - Advanced (Technical)
-- **Bilingual Support**: English (default) and Turkish translations
-- **Dark/Light Mode**: Comfortable reading in any environment
+NASA Biology Library is a hackathon project that transforms biology research articles into an engaging 3D bookshelf experience. Browse articles as interactive 3D books, read at multiple difficulty levels, and get AI-powered assistance.
 
-### User Features
-- **Favorites System**: Save your favorite articles
-- **Reading History**: Track articles you've read
-- **Reading Timer**: Automatically tracks time spent reading each article
-- **Statistics**: View your reading progress and habits
+## Features
 
-## 🛠️ Technology Stack
+- 3D Interactive Bookshelf - Browse articles as beautifully rendered books on virtual shelves
+- Multiple Reading Levels - View content at Original, Beginner, Intermediate, or Advanced difficulty
+- Bilingual Support - Full English and Turkish translations
+- AI Chatbot - Context-aware assistant powered by Google Gemini AI
+- Reading Analytics - Track your reading time, history, and favorite articles
+- Dark and Light Theme - Beautiful space-themed interface with theme switching
+- Smart Search - Find articles by title, content, or author
+- Favorites System - Save and organize your favorite articles
 
-- **Framework**: React 18 + TypeScript
-- **Build Tool**: Vite
-- **3D Graphics**: Three.js + React Three Fiber + Drei
-- **Animations**: Framer Motion
-- **State Management**: Zustand (with localStorage persistence)
-- **Internationalization**: i18next + react-i18next
-- **Styling**: Tailwind CSS
-- **Architecture**: Modular, OOP, SOLID principles
+## Tech Stack
 
-## 📁 Project Structure
+- React 18 with TypeScript
+- Three.js and React Three Fiber for 3D graphics
+- Vite as build tool
+- Tailwind CSS for styling
+- Zustand for state management
+- i18next for internationalization
+- Framer Motion for animations
+- Google Gemini AI for chatbot
 
-```
-nasa-biology-library/
-├── src/
-│   ├── components/          # React components
-│   │   ├── ArticleViewer/   # Full article view with level selector
-│   │   ├── Book/            # 3D book component
-│   │   ├── Bookshelf/       # 3D bookshelf scene
-│   │   ├── Header/          # App header with controls
-│   │   └── SearchBar/       # Search functionality
-│   ├── data/                # Mock data
-│   │   └── articles.json    # 10 biology articles
-│   ├── hooks/               # Custom React hooks
-│   │   └── useReadingTimer.ts
-│   ├── i18n/                # Internationalization
-│   │   ├── config.ts
-│   │   └── locales/
-│   │       ├── en.ts        # English translations
-│   │       └── tr.ts        # Turkish translations
-│   ├── models/              # TypeScript interfaces
-│   │   └── Article.ts
-│   ├── services/            # Business logic
-│   │   └── ArticleService.ts
-│   ├── stores/              # Zustand stores
-│   │   ├── favoritesStore.ts
-│   │   ├── readingHistoryStore.ts
-│   │   └── settingsStore.ts
-│   ├── App.tsx              # Main app component
-│   ├── main.tsx             # Entry point
-│   └── index.css            # Global styles
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── tailwind.config.js
-└── postcss.config.js
-```
-
-## 🎯 Architecture & Design Patterns
-
-### SOLID Principles
-- **Single Responsibility**: Each component and service has one clear purpose
-- **Open/Closed**: Services are extensible without modification
-- **Liskov Substitution**: Interfaces are consistently implemented
-- **Interface Segregation**: Focused, minimal interfaces
-- **Dependency Inversion**: Components depend on abstractions (stores, services)
-
-### Key Patterns
-- **Singleton Pattern**: `ArticleService` instance
-- **Observer Pattern**: Zustand stores with reactive subscriptions
-- **Component Composition**: Modular React components
-- **Custom Hooks**: Reusable logic (reading timer)
-
-## 🚦 Getting Started
+## Installation
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18 or higher
 - npm or yarn
 
-### Installation
+### Setup Steps
 
-1. **Install dependencies**:
+1. Clone the repository
+
 ```bash
-cd nasa-biology-library
+git clone https://github.com/taqume/NasaBiologyLibrary.git
+cd NasaBiologyLibrary
+```
+
+2. Install dependencies
+
+```bash
 npm install
 ```
 
-2. **Start development server**:
+3. Create a .env file in the root directory
+
+```
+VITE_GEMINI_API_KEY=your_google_gemini_api_key
+```
+
+4. Start the development server
+
 ```bash
 npm run dev
 ```
 
-3. **Build for production**:
+5. Open your browser and visit http://localhost:5173
+
+## Usage
+
+### Available Commands
+
 ```bash
-npm run build
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run preview  # Preview production build
+npm run lint     # Run ESLint
 ```
 
-4. **Preview production build**:
-```bash
-npm run preview
+### How to Use the App
+
+1. Browse - Scroll through the 3D bookshelf to explore articles
+2. Search - Use the search bar to find specific articles
+3. Read - Click on any book to open the full article
+4. Adjust Level - Switch between difficulty levels
+5. Favorite - Click the heart icon to save articles
+6. Chat - Click the astronaut icon to discuss articles with AI
+
+## Project Structure
+
+```
+nasa-biology-library/
+├── src/
+│   ├── components/       # React components
+│   ├── services/         # Business logic
+│   ├── stores/           # State management
+│   ├── i18n/             # Translations
+│   ├── models/           # TypeScript types
+│   └── hooks/            # Custom hooks
+├── articles.csv          # Article data
+└── README.md
 ```
 
-## 📚 Adding New Articles
+## Acknowledgments
 
-Articles are stored in `src/data/articles.json`. To add a new article:
-
-```json
-{
-  "id": 11,
-  "title": "Your Article Title",
-  "author": "Author Name",
-  "date": "2024-01-01",
-  "category": "Category Name",
-  "coverColor": "#HEX_COLOR",
-  "content": {
-    "original": "Full article content...",
-    "beginner": "Simplified version...",
-    "intermediate": "Medium complexity...",
-    "advanced": "Technical version..."
-  },
-  "translations": {
-    "tr": {
-      "title": "Türkçe Başlık",
-      "author": "Yazar Adı",
-      "category": "Kategori",
-      "content": {
-        "original": "Tam makale içeriği...",
-        "beginner": "Basitleştirilmiş versiyon...",
-        "intermediate": "Orta zorluk...",
-        "advanced": "Teknik versiyon..."
-      }
-    }
-  }
-}
-```
-
-## 🎨 Customization
-
-### Theme Colors
-Edit `tailwind.config.js` to customize the color scheme:
-```js
-colors: {
-  primary: {
-    500: '#YOUR_COLOR',
-    // ...
-  }
-}
-```
-
-### Languages
-To add a new language:
-1. Create `src/i18n/locales/[lang].ts`
-2. Add translations
-3. Update `Language` enum in `src/models/Article.ts`
-4. Update `src/i18n/config.ts`
-
-## 🔧 Technologies Used
-
-| Technology | Purpose |
-|------------|---------|
-| React | UI framework |
-| TypeScript | Type safety |
-| Three.js | 3D graphics |
-| React Three Fiber | React renderer for Three.js |
-| Framer Motion | Smooth animations |
-| Zustand | State management |
-| i18next | Internationalization |
-| Tailwind CSS | Utility-first styling |
-| Vite | Fast build tool |
-
-## 📊 Current Status
-
-- ✅ Project structure created
-- ✅ 10 mock articles (biology-themed)
-- ✅ 3D bookshelf implementation
-- ✅ Article viewer with difficulty levels
-- ✅ Search functionality
-- ✅ EN/TR language support
-- ✅ Dark/Light mode
-- ✅ Favorites system
-- ✅ Reading history tracking
-- ✅ Reading time tracker
-- ⏳ Statistics page (structure ready)
-- ⏳ Additional animations and polish
-
-## 🚀 Future Enhancements
-
-- PWA support for offline access
-- More languages (Spanish, French, etc.)
-- Export/Share functionality
-- PDF generation from articles
-- Advanced search filters (by category, date, etc.)
-- User notes and annotations
-- Audio narration of articles
-- Mobile-optimized 3D experience
-
-## 📝 License
-
-This project is open source and available for educational purposes.
-
-## 🤝 Contributing
-
-To contribute:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes following SOLID principles
-4. Test thoroughly
-5. Submit a pull request
+- NASA for inspiring biology research content
+- Google Gemini for AI capabilities
+- Three.js community for 3D rendering tools
 
 ---
 
-**Built with ❤️ for NASA Biology Education**
+Made with love during a 48-hour hackathon
+
+Exploring the cosmos of biology, one article at a time
