@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="absolute inset-0 bg-gradient-to-br from-slate-400 to-sky-400 rounded-2xl blur-xl opacity-40 group-hover:opacity-70 transition-opacity animate-pulse" />
               {/* Logo Container - Transparent */}
               <div className="relative w-12 h-12 flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
-                <img src="/src/icon.png" alt="NASA Biology" className="w-full h-full object-contain drop-shadow-2xl" />
+                <img src="/icon.png" alt="NASA Biology" className="w-full h-full object-contain drop-shadow-2xl" />
               </div>
             </div>
             
