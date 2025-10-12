@@ -78,8 +78,8 @@ export const BookReader: React.FC<BookReaderProps> = ({
     : article.author;
   const content = articleService.getLocalizedContent(article, language, selectedLevel);
 
-  // Split content into pages (approximately 650 characters per page for perfect fit)
-  const charsPerPage = 650;
+  // Split content into pages (approximately 1100 characters per page for 1920x1080)
+  const charsPerPage = 1100;
   
   // Calculate dynamic page breaks (don't break words)
   const calculatePageBreaks = (text: string): number[] => {
@@ -336,10 +336,10 @@ export const BookReader: React.FC<BookReaderProps> = ({
         onClick={handleClose}
       >
         {/* Controls Container - Responsive */}
-        <div className="relative w-full h-full md:w-[1000px] md:h-[600px] flex items-center justify-center">
+        <div className="relative w-full h-full md:w-[1400px] md:h-[800px] flex items-center justify-center">
           {/* Difficulty Selector - Top Center */}
           <motion.div
-            className="absolute top-2 md:-top-14 left-2 right-2 md:left-0 md:right-0 mx-auto w-fit flex items-center gap-1 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-neutral-900/20 border md:border-2 border-white/30 dark:border-white/10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl shadow-black/20 p-1 z-50"
+            className="absolute top-2 md:-top-16 left-2 right-2 md:left-0 md:right-0 mx-auto w-fit flex items-center gap-1 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-neutral-900/20 border md:border-2 border-white/30 dark:border-white/10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl shadow-black/20 p-1 z-50"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
@@ -352,7 +352,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
                   : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10'
               }`}
             >
-              Beginner
+              {t('difficulty.beginner')}
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.ADVANCED); }}
@@ -362,20 +362,17 @@ export const BookReader: React.FC<BookReaderProps> = ({
                   : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10'
               }`}
             >
-              Advanced
+              {t('difficulty.advanced')}
             </button>
           </motion.div>
 
           {/* Vertical Progress Bar - Left Side (Hidden on mobile) */}
           <motion.div
-            className="hidden md:flex absolute top-0 -left-[15px] flex-col items-center gap-2 h-[600px] z-50"
+            className="hidden md:flex absolute top-0 -left-[20px] flex-col items-center gap-2 h-[800px] z-50"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.3 }}
           >
-            <span className="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">
-              {readingProgress}%
-            </span>
             <div className="w-2 flex-1 bg-amber-200/50 dark:bg-neutral-700/50 rounded-full overflow-hidden shadow-inner relative">
               <motion.div
                 className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-amber-500 via-orange-500 to-amber-600 rounded-full shadow-lg"
@@ -388,7 +385,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
 
           {/* Right Side Buttons - Adjusted for mobile */}
           <motion.div
-            className="absolute top-2 right-2 md:top-0 md:-right-[15px] flex md:flex-col gap-1 md:gap-2 z-50"
+            className="absolute top-2 right-2 md:top-0 md:-right-[20px] flex md:flex-col gap-1 md:gap-2 z-50"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.2 }}
@@ -429,7 +426,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
 
           {/* Page Navigation - Bottom Center */}
           <motion.div
-            className="absolute bottom-2 md:-bottom-[53px] left-2 right-2 md:left-10 md:right-3 mx-auto w-fit z-50"
+            className="absolute bottom-2 md:-bottom-[60px] left-2 right-2 md:left-10 md:right-3 mx-auto w-fit z-50"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
@@ -492,11 +489,11 @@ export const BookReader: React.FC<BookReaderProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
           {/* Book Itself - Responsive Size */}
-          <div className="relative w-full h-full md:w-[1000px] md:h-[600px] flex items-center justify-center px-4 md:px-0">
+          <div className="relative w-full h-full md:w-[1400px] md:h-[800px] flex items-center justify-center px-4 md:px-0">
             
             {/* Open Book */}
             <motion.div
-              className="relative flex w-full max-w-[900px] md:max-w-none"
+              className="relative flex w-full max-w-[900px] md:max-w-none gap-2 md:gap-3"
               style={{ 
                 transformStyle: 'preserve-3d',
                 filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5))'
@@ -510,19 +507,9 @@ export const BookReader: React.FC<BookReaderProps> = ({
                 transition: { duration: 1, ease: [0.43, 0.13, 0.23, 0.96], delay: 0.2 }
               }}
             >
-              {/* Book Spine */}
-              <div 
-                className="absolute left-1/2 top-0 bottom-0 w-8 md:w-12 -translate-x-1/2 z-20"
-                style={{
-                  background: 'linear-gradient(to right, #2a2a2a 0%, #3a3a3a 50%, #2a2a2a 100%)',
-                  boxShadow: 'inset -3px 0 10px rgba(0, 0, 0, 0.8), inset 3px 0 10px rgba(0, 0, 0, 0.8)',
-                  transform: 'translateZ(5px)'
-                }}
-              />
-
               {/* Left Page - With Front and Back */}
               <motion.div
-                className="relative w-[calc(50%-16px)] md:w-[460px] h-[500px] md:h-[600px] rounded-l-lg overflow-hidden"
+                className="left-16 relative w-[calc(50%-4px)] md:w-[640px] h-[500px] md:h-[800px] rounded-l-lg overflow-hidden"
                 style={{
                   transformStyle: 'preserve-3d',
                   transformOrigin: 'right center',
@@ -555,17 +542,17 @@ export const BookReader: React.FC<BookReaderProps> = ({
                   <div className="relative h-full py-10 pl-10 pr-14 overflow-hidden">
                     {leftPageIsInfo ? (
                       // Info Page - Technical Article Information
-                      <div className="space-y-5">
+                      <div className="space-y-6">
                         <div className="border-b-2 border-amber-800/20 dark:border-amber-200/20 pb-4">
-                          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-amber-50 mb-3 leading-tight">
+                          <h1 className="text-3xl font-serif font-bold text-gray-900 dark:text-amber-50 mb-3 leading-tight">
                             {title}
                           </h1>
-                          <p className="text-sm text-gray-700 dark:text-amber-100 font-medium">
+                          <p className="text-base text-gray-700 dark:text-amber-100 font-medium">
                             {t('book.by')} {author}
                           </p>
                         </div>
                         
-                        <div className="space-y-3 text-gray-700 dark:text-amber-100 text-sm">
+                        <div className="space-y-4 text-gray-700 dark:text-amber-100 text-base">
                           <div className="flex items-start gap-2">
                             <span className="font-semibold min-w-[80px]">{t('book.published')}:</span>
                             <span className="flex-1">{new Date(article.date).toLocaleDateString(language, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
@@ -581,7 +568,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
                                 href={article.url} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="flex-1 text-blue-600 dark:text-blue-400 hover:underline break-all text-xs"
+                                className="flex-1 text-blue-600 dark:text-blue-400 hover:underline break-all text-sm"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 {article.url.replace('https://www.ncbi.nlm.nih.gov/pmc/articles/', 'PMC').replace('/', '')}
@@ -590,9 +577,8 @@ export const BookReader: React.FC<BookReaderProps> = ({
                           )}
                         </div>
 
-                        <div className="pt-3 border-t border-amber-800/20 dark:border-amber-200/20">
-                          <p className="text-xs text-gray-600 dark:text-amber-200/80 italic">
-                            {language === 'tr' 
+                        <div className="pt-4 border-t border-amber-800/20 dark:border-amber-200/20">
+                          <p className="text-sm text-gray-600 dark:text-amber-200/80 italic">{language === 'tr' 
                               ? 'Bu makale NASA Biyoloji Kütüphanesi\'nde bulunan gerçek bir bilimsel araştırmadır. Seçtiğiniz zorluk seviyesine göre içerik düzenlenmiştir.'
                               : 'This is a real scientific research article from the NASA Biology Library. Content is adapted to your selected difficulty level.'}
                           </p>
@@ -601,15 +587,14 @@ export const BookReader: React.FC<BookReaderProps> = ({
                     ) : (
                       // Content Page
                       <div className="prose dark:prose-invert max-w-none">
-                        <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
+                        <p className="text-lg leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
                           {leftPageContent}
                         </p>
                       </div>
                     )}
                     
                     {/* Page Number */}
-                    <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
-                      {currentPage * 2 - 1}
+                    <div className="absolute bottom-6 left-0 right-0 text-center text-sm text-gray-500 dark:text-amber-200">{currentPage * 2 - 1}
                     </div>
                   </div>
                 </div>
@@ -633,13 +618,13 @@ export const BookReader: React.FC<BookReaderProps> = ({
 
                   <div className="relative h-full py-10 pl-14 pr-10 overflow-hidden">
                     <div className="prose dark:prose-invert max-w-none">
-                      <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
+                      <p className="text-lg leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
                         {prevRightPageContent}
                       </p>
                     </div>
                     
                     {/* Page Number */}
-                    <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
+                    <div className="absolute bottom-6 left-0 right-0 text-center text-sm text-gray-500 dark:text-amber-200">
                       {(currentPage - 1) * 2}
                     </div>
                   </div>
@@ -648,7 +633,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
 
               {/* Right Page - With Front and Back */}
               <motion.div
-                className="relative w-[460px] h-[600px] rounded-r-lg overflow-hidden"
+                className="left-14 relative w-[calc(50%-4px)] md:w-[640px] h-[500px] md:h-[800px] rounded-r-lg overflow-hidden"
                 style={{
                   transformStyle: 'preserve-3d',
                   transformOrigin: 'left center',
@@ -680,13 +665,13 @@ export const BookReader: React.FC<BookReaderProps> = ({
 
                   <div className="relative h-full py-10 pl-14 pr-10 overflow-hidden">
                     <div className="prose dark:prose-invert max-w-none">
-                      <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
+                      <p className="text-lg leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
                         {rightPageContent}
                       </p>
                     </div>
                     
                     {/* Page Number */}
-                    <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
+                    <div className="absolute bottom-6 left-0 right-0 text-center text-sm text-gray-500 dark:text-amber-200">
                       {currentPage * 2}
                     </div>
                   </div>
@@ -713,13 +698,13 @@ export const BookReader: React.FC<BookReaderProps> = ({
                     {nextLeftPageContent && (currentPage + 1) * 2 - 1 <= totalPages ? (
                       <>
                         <div className="prose dark:prose-invert max-w-none">
-                          <p className="text-base leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
+                          <p className="text-lg leading-relaxed text-gray-800 dark:text-amber-100 font-serif" style={{ wordBreak: 'keep-all', hyphens: 'none', overflowWrap: 'normal', textAlign: 'justify', textJustify: 'inter-word' }}>
                             {nextLeftPageContent}
                           </p>
                         </div>
                         
                         {/* Page Number */}
-                        <div className="absolute bottom-6 left-0 right-0 text-center text-xs text-gray-500 dark:text-amber-200">
+                        <div className="absolute bottom-6 left-0 right-0 text-center text-sm text-gray-500 dark:text-amber-200">
                           {(currentPage + 1) * 2 - 1}
                         </div>
                       </>
