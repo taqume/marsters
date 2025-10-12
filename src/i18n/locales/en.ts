@@ -33,6 +33,7 @@ export default {
       beginner: 'Beginner',
       advanced: 'Advanced',
       completed: 'completed',
+      difficultyLevel: 'Difficulty Level',
     },
     statistics: {
       title: 'Reading Statistics',

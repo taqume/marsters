@@ -33,6 +33,7 @@ export default {
       beginner: 'Başlangıç',
       advanced: 'Gelişmiş',
       completed: 'tamamlandı',
+      difficultyLevel: 'Zorluk Seviyesi',
     },
     statistics: {
       title: 'Okuma İstatistikleri',

@@ -170,14 +170,14 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ currentArticle }) => {
     <>
       {/* Floating Astronaut Avatar - Moon Surface Theme */}
       <motion.div
-        className="fixed bottom-6 right-6 z-[9999]"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[9999]"
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       >
         <motion.button
           onClick={toggleChat}
-          className="relative w-20 h-20 rounded-full cursor-pointer overflow-hidden group"
+          className="relative w-14 h-14 md:w-20 md:h-20 rounded-full cursor-pointer overflow-hidden group"
           style={{
             background: 'radial-gradient(circle at 30% 30%, #e5e7eb 0%, #9ca3af 50%, #6b7280 100%)',
             boxShadow: `
@@ -210,7 +210,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ currentArticle }) => {
           />
           
           {/* Astronaut Icon */}
-          <div className="absolute inset-0 flex items-center justify-center p-2">
+          <div className="absolute inset-0 flex items-center justify-center p-1.5 md:p-2">
             <img 
               src={astronautIcon} 
               alt="AI Assistant" 
@@ -236,7 +236,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ currentArticle }) => {
           {/* Sparkle indicator when active */}
           {isTyping && (
             <motion.div
-              className="absolute -top-1 -right-1 rounded-full p-1.5"
+              className="absolute -top-1 -right-1 rounded-full p-1 md:p-1.5"
               style={{
                 background: 'radial-gradient(circle, #94a3b8 0%, #64748b 100%)',
                 boxShadow: '0 2px 8px rgba(148, 163, 184, 0.6), inset 0 1px 2px rgba(255,255,255,0.3)',
@@ -244,14 +244,14 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ currentArticle }) => {
               animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <Sparkles className="w-3 h-3 text-white" />
+              <Sparkles className="w-2 h-2 md:w-3 md:h-3 text-white" />
             </motion.div>
           )}
 
           {/* Notification badge for new context */}
           {!isChatOpen && currentArticle && (
             <motion.div
-              className="absolute -top-1 -right-1 rounded-full w-5 h-5 flex items-center justify-center text-white text-xs font-bold"
+              className="absolute -top-1 -right-1 rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center text-white text-[10px] md:text-xs font-bold"
               style={{
                 background: 'radial-gradient(circle, #ef4444 0%, #b91c1c 100%)',
                 boxShadow: '0 2px 8px rgba(239, 68, 68, 0.6)',
@@ -264,8 +264,8 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ currentArticle }) => {
             </motion.div>
           )}
 
-          {/* Hover tooltip */}
-          <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          {/* Hover tooltip - Hide on mobile */}
+          <div className="hidden md:block absolute bottom-full mb-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             <div 
               className="text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap font-semibold"
               style={{
@@ -284,7 +284,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ currentArticle }) => {
         {isChatOpen && (
           <motion.div
             ref={chatContainerRef}
-            className="fixed bottom-28 right-6 z-[9999] w-96 h-[520px] rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            className="fixed inset-4 md:inset-auto md:bottom-28 md:right-6 z-[9999] md:w-96 md:h-[520px] rounded-2xl shadow-2xl overflow-hidden flex flex-col"
             style={{
               background: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)',
               border: '3px solid #94a3b8',

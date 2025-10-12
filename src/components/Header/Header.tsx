@@ -35,10 +35,68 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-[15px] backdrop-saturate-[200%] bg-white/5 dark:bg-gray-950/15 border-b border-white/50 dark:border-white/30 shadow-2xl shadow-black/10 transition-all rounded-b-3xl">
-      <div className="container mx-auto px-6 py-3">
-        {/* Single Row: Logo, SearchBar, Controls */}
-        <div className="flex items-center justify-between gap-6">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-[15px] backdrop-saturate-[200%] bg-white/5 dark:bg-gray-950/15 border-b border-white/50 dark:border-white/30 shadow-2xl shadow-black/10 transition-all md:rounded-b-3xl">
+      <div className="container mx-auto px-3 md:px-6 py-2 md:py-3">
+        {/* Mobile Layout */}
+        <div className="md:hidden">
+          {/* Top Row: Logo and Controls */}
+          <div className="flex items-center justify-between mb-2">
+            {/* Logo - Compact */}
+            <div className="flex items-center space-x-2 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-400 to-sky-400 rounded-xl blur-lg opacity-40 group-hover:opacity-70 transition-opacity" />
+                <div className="relative w-10 h-10 flex items-center justify-center">
+                  <img src="/icon.png" alt="NASA Biology" className="w-full h-full object-contain drop-shadow-xl" />
+                </div>
+              </div>
+              <div>
+                <h1 className="text-base font-bold bg-gradient-to-r from-slate-600 via-sky-600 to-slate-700 dark:from-slate-300 dark:via-sky-300 dark:to-slate-400 bg-clip-text text-transparent">
+                  {t('header.title')}
+                </h1>
+              </div>
+            </div>
+
+            {/* Controls - Compact */}
+            <div className="flex items-center space-x-1">
+              <button
+                onClick={handleLanguageChange}
+                className="flex items-center justify-center px-2.5 py-1.5 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 transition-all border border-blue-300/50 dark:border-blue-400/30"
+                aria-label="Change language"
+              >
+                <span className="text-xs font-semibold text-blue-700 dark:text-blue-300 font-mono">
+                  {language.toUpperCase()}
+                </span>
+              </button>
+
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-full bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-blue-900/40 dark:to-indigo-900/40 transition-all border border-yellow-300/50 dark:border-blue-400/30"
+                aria-label="Toggle theme"
+              >
+                {theme === ThemeMode.LIGHT ? (
+                  <Moon className="w-4 h-4 text-indigo-700" />
+                ) : (
+                  <Sun className="w-4 h-4 text-yellow-400" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Row: Search */}
+          <div className="w-full">
+            <SearchBar 
+              value={searchQuery} 
+              onChange={onSearchChange}
+              searchInContent={searchInContent}
+              onSearchInContentChange={onSearchInContentChange}
+              searchByAuthor={searchByAuthor}
+              onSearchByAuthorChange={onSearchByAuthorChange}
+            />
+          </div>
+        </div>
+
+        {/* Desktop Layout - Original */}
+        <div className="hidden md:flex items-center justify-between gap-6">
           {/* NASA-Style Logo */}
           <div className="flex items-center space-x-4 group flex-shrink-0">
             <div className="relative">

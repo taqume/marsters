@@ -59,32 +59,32 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       {/* Search container */}
       <div className="relative">
         {/* Search icon */}
-        <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none z-10">
-          <Search className={`w-5 h-5 transition-all duration-300 text-blue-600 dark:text-blue-400 ${
+        <div className="absolute inset-y-0 left-0 pl-3 md:pl-5 flex items-center pointer-events-none z-10">
+          <Search className={`w-4 h-4 md:w-5 md:h-5 transition-all duration-300 text-blue-600 dark:text-blue-400 ${
             isFocused ? 'scale-110' : ''
           }`} />
         </div>
 
         {/* Satellite scanning icon when typing */}
         {value && (
-          <div className="absolute inset-y-0 right-32 flex items-center pointer-events-none">
-            <Satellite className="w-4 h-4 text-blue-500 dark:text-blue-400 animate-pulse" />
+          <div className="absolute inset-y-0 right-20 md:right-32 flex items-center pointer-events-none">
+            <Satellite className="w-3 h-3 md:w-4 md:h-4 text-blue-500 dark:text-blue-400 animate-pulse" />
           </div>
         )}
 
         {/* Toggle Buttons Container */}
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-2 z-20">
+        <div className="absolute inset-y-0 right-0 pr-1.5 md:pr-3 flex items-center gap-1 md:gap-2 z-20">
           {/* Author Search Toggle Button */}
           <button
             onClick={handleAuthorSearchToggle}
             className={`
-              relative p-2.5 rounded-xl transition-all duration-300
+              relative p-1.5 md:p-2.5 rounded-lg md:rounded-xl transition-all duration-300
               backdrop-blur-md z-20
               ${searchByAuthor
                 ? 'bg-gradient-to-r from-amber-500/90 to-orange-500/90 text-white shadow-lg shadow-amber-500/30'
                 : 'bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-400 hover:bg-white/90 dark:hover:bg-gray-700/90'
               }
-              border-2 ${searchByAuthor 
+              border md:border-2 ${searchByAuthor 
                 ? 'border-amber-400/50 dark:border-amber-500/50' 
                 : 'border-gray-300/50 dark:border-gray-600/50'
               }
@@ -94,9 +94,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             title={searchByAuthor ? t('header.searchByAuthorOn') : t('header.searchByAuthorOff')}
           >
             {/* Icon with transition */}
-            <div className="relative w-5 h-5">
+            <div className="relative w-4 h-4 md:w-5 md:h-5">
               <UserCircle 
-                className={`w-5 h-5 transition-all duration-300 ${
+                className={`w-4 h-4 md:w-5 md:h-5 transition-all duration-300 ${
                   searchByAuthor 
                     ? 'opacity-100 scale-100' 
                     : 'opacity-40 scale-95'
@@ -106,7 +106,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
             {/* Pulse effect when active */}
             {searchByAuthor && (
-              <div className="absolute inset-0 rounded-xl bg-amber-400/30 animate-ping" />
+              <div className="absolute inset-0 rounded-lg md:rounded-xl bg-amber-400/30 animate-ping" />
             )}
           </button>
 
@@ -114,13 +114,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           <button
             onClick={handleContentSearchToggle}
             className={`
-              relative p-2.5 rounded-xl transition-all duration-300
+              relative p-1.5 md:p-2.5 rounded-lg md:rounded-xl transition-all duration-300
               backdrop-blur-md z-20
               ${searchInContent
                 ? 'bg-gradient-to-r from-purple-500/90 to-blue-500/90 text-white shadow-lg shadow-purple-500/30'
                 : 'bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-400 hover:bg-white/90 dark:hover:bg-gray-700/90'
               }
-              border-2 ${searchInContent 
+              border md:border-2 ${searchInContent 
                 ? 'border-purple-400/50 dark:border-purple-500/50' 
                 : 'border-gray-300/50 dark:border-gray-600/50'
               }
@@ -130,9 +130,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             title={searchInContent ? t('header.searchInContentOn') : t('header.searchInContentOff')}
           >
             {/* Icon with transition */}
-            <div className="relative w-5 h-5">
+            <div className="relative w-4 h-4 md:w-5 md:h-5">
               <FileText 
-                className={`w-5 h-5 transition-all duration-300 ${
+                className={`w-4 h-4 md:w-5 md:h-5 transition-all duration-300 ${
                   searchInContent 
                     ? 'opacity-100 scale-100' 
                     : 'opacity-40 scale-95'
@@ -142,7 +142,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
             {/* Pulse effect when active */}
             {searchInContent && (
-              <div className="absolute inset-0 rounded-xl bg-purple-400/30 animate-ping" />
+              <div className="absolute inset-0 rounded-lg md:rounded-xl bg-purple-400/30 animate-ping" />
             )}
           </button>
         </div>
@@ -156,15 +156,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onBlur={() => setIsFocused(false)}
           placeholder={t('header.search')}
           className={`
-            w-full pl-14 pr-32 py-3 
+            w-full pl-10 md:pl-14 pr-20 md:pr-32 py-2 md:py-3 text-sm md:text-base
             bg-white/95 dark:bg-gray-900/95 
             backdrop-blur-xl
-            border-2 transition-all duration-300
+            border md:border-2 transition-all duration-300
             ${isFocused 
               ? 'border-blue-400 dark:border-blue-500 shadow-2xl shadow-blue-500/30' 
               : 'border-blue-200/50 dark:border-blue-700/30 shadow-lg'
             }
-            rounded-2xl 
+            rounded-xl md:rounded-2xl 
             text-gray-800 dark:text-white 
             placeholder-gray-400 dark:placeholder-gray-500
             focus:outline-none 

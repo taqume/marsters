@@ -36,12 +36,20 @@ export const BookReader: React.FC<BookReaderProps> = ({
   const [isFlipping, setIsFlipping] = useState(false);
   const [flipDirection, setFlipDirection] = useState<'next' | 'prev' | null>(null);
   const [readingProgress, setReadingProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
   const bookRef = useRef<HTMLDivElement>(null);
   const isReading = !isAnimatingOpen && !isAnimatingClose;
 
   // Track reading time
   useReadingTimer(article.id, isReading);
+
+  // Detect mobile
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Lock body scroll when book is open
   useEffect(() => {
@@ -193,6 +201,131 @@ export const BookReader: React.FC<BookReaderProps> = ({
     ? getPageContent(prevRightContentIndex) 
     : '';
 
+  // Mobile Simple Reader Render
+  if (isMobile) {
+    return (
+      <div className="fixed inset-0 z-50 bg-gradient-to-b from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="flex-shrink-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 p-3 shadow-lg">
+          <div className="flex items-center justify-between mb-2">
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 transition-colors"
+            >
+              <X className="w-5 h-5 text-red-600 dark:text-red-400" />
+            </button>
+
+            <div className="flex items-center gap-2">
+              {article.url && (
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 active:bg-blue-500/40 transition-colors"
+                >
+                  <ExternalLink className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                </a>
+              )}
+
+              <button
+                onClick={toggleFavorite}
+                className="p-2 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-300 dark:active:bg-gray-600 transition-colors"
+              >
+                {isFavorite(article.id) ? (
+                  <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+                ) : (
+                  <Heart className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Difficulty Selector */}
+          <div className="flex items-center gap-2 mb-2">
+            <button
+              onClick={() => setSelectedLevel(DifficultyLevel.BEGINNER)}
+              className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                selectedLevel === DifficultyLevel.BEGINNER
+                  ? 'bg-amber-500 text-white shadow-md'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              {t('book.beginner')}
+            </button>
+            <button
+              onClick={() => setSelectedLevel(DifficultyLevel.ADVANCED)}
+              className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                selectedLevel === DifficultyLevel.ADVANCED
+                  ? 'bg-red-500 text-white shadow-md'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              {t('book.advanced')}
+            </button>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2">
+            {title}
+          </h1>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            {t('book.by')} {author}
+          </p>
+        </div>
+
+        {/* Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto px-4 py-6">
+          <div className="max-w-2xl mx-auto">
+            {/* Article Info */}
+            <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 mb-6 shadow-md border border-gray-200 dark:border-gray-700">
+              <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <div className="flex gap-2">
+                  <span className="font-semibold min-w-[70px]">{t('book.published')}:</span>
+                  <span className="flex-1">{new Date(article.date).toLocaleDateString(language, { year: 'numeric', month: 'long' })}</span>
+                </div>
+                {article.url && (
+                  <div className="flex gap-2">
+                    <span className="font-semibold min-w-[70px]">DOI:</span>
+                    <a 
+                      href={article.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex-1 text-blue-600 dark:text-blue-400 hover:underline text-xs break-all"
+                    >
+                      {article.url.replace('https://www.ncbi.nlm.nih.gov/pmc/articles/', 'PMC').replace('/', '')}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="prose prose-sm dark:prose-invert max-w-none">
+              <p className="text-sm leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
+                {content}
+              </p>
+            </div>
+
+            {/* Bottom spacing */}
+            <div className="h-20" />
+          </div>
+        </div>
+
+        {/* Footer - Reading Progress */}
+        <div className="flex-shrink-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 p-3 shadow-lg">
+          <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
+            <span className="flex items-center gap-1">
+              <BookOpen className="w-3 h-3" />
+              {t('book.difficultyLevel')}: {selectedLevel === DifficultyLevel.BEGINNER ? t('book.beginner') : t('book.advanced')}
+            </span>
+            <span>{content.length.toLocaleString()} {language === 'tr' ? 'karakter' : 'characters'}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop 3D Book Reader Render (original)
   return (
     <AnimatePresence>
       <motion.div
@@ -202,18 +335,18 @@ export const BookReader: React.FC<BookReaderProps> = ({
         exit={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
         onClick={handleClose}
       >
-        {/* Controls Container - Centered with Fixed Width */}
-        <div className="relative w-[1000px] h-[600px]">
+        {/* Controls Container - Responsive */}
+        <div className="relative w-full h-full md:w-[1000px] md:h-[600px] flex items-center justify-center">
           {/* Difficulty Selector - Top Center */}
           <motion.div
-            className="absolute -top-14 left-0 right-0 mx-auto w-fit flex items-center gap-1 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-neutral-900/20 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 p-1 z-50"
+            className="absolute top-2 md:-top-14 left-2 right-2 md:left-0 md:right-0 mx-auto w-fit flex items-center gap-1 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-neutral-900/20 border md:border-2 border-white/30 dark:border-white/10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl shadow-black/20 p-1 z-50"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
           >
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.BEGINNER); }}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all backdrop-blur-sm ${
+              className={`px-2 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all backdrop-blur-sm ${
                 selectedLevel === DifficultyLevel.BEGINNER
                   ? 'bg-amber-500/90 text-white shadow-lg'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10'
@@ -223,7 +356,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setSelectedLevel(DifficultyLevel.ADVANCED); }}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all backdrop-blur-sm ${
+              className={`px-2 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-semibold transition-all backdrop-blur-sm ${
                 selectedLevel === DifficultyLevel.ADVANCED
                   ? 'bg-red-500/90 text-white shadow-lg'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10'
@@ -233,9 +366,9 @@ export const BookReader: React.FC<BookReaderProps> = ({
             </button>
           </motion.div>
 
-          {/* Vertical Progress Bar - Left Side */}
+          {/* Vertical Progress Bar - Left Side (Hidden on mobile) */}
           <motion.div
-            className="absolute top-0 -left-[15px] flex flex-col items-center gap-2 h-[600px] z-50"
+            className="hidden md:flex absolute top-0 -left-[15px] flex-col items-center gap-2 h-[600px] z-50"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.3 }}
@@ -253,19 +386,19 @@ export const BookReader: React.FC<BookReaderProps> = ({
             </div>
           </motion.div>
 
-          {/* Right Side Buttons */}
+          {/* Right Side Buttons - Adjusted for mobile */}
           <motion.div
-            className="absolute top-0 -right-[15px] flex flex-col gap-2 z-50"
+            className="absolute top-2 right-2 md:top-0 md:-right-[15px] flex md:flex-col gap-1 md:gap-2 z-50"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.2 }}
           >
             <button
               onClick={(e) => { e.stopPropagation(); handleClose(); }}
-              className="w-12 h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-red-500/30 hover:bg-red-500/50 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 hover:shadow-red-500/30 transition-all flex items-center justify-center"
+              className="w-10 h-10 md:w-12 md:h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-red-500/30 hover:bg-red-500/50 border md:border-2 border-white/30 dark:border-white/10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl shadow-black/20 hover:shadow-red-500/30 transition-all flex items-center justify-center"
               title="Close"
             >
-              <X className="w-6 h-6 text-red-100" />
+              <X className="w-5 h-5 md:w-6 md:h-6 text-red-100" />
             </button>
 
             {article.url && (
@@ -274,54 +407,57 @@ export const BookReader: React.FC<BookReaderProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="w-12 h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-blue-500/30 hover:bg-blue-500/50 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 hover:shadow-blue-500/30 transition-all flex items-center justify-center"
+                className="w-10 h-10 md:w-12 md:h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-blue-500/30 hover:bg-blue-500/50 border md:border-2 border-white/30 dark:border-white/10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl shadow-black/20 hover:shadow-blue-500/30 transition-all flex items-center justify-center"
                 title="Open Original Article"
               >
-                <ExternalLink className="w-5 h-5 text-blue-100" />
+                <ExternalLink className="w-4 h-4 md:w-5 md:h-5 text-blue-100" />
               </a>
             )}
 
             <button
               onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}
-              className="w-12 h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/20 dark:bg-neutral-900/30 hover:bg-white/30 dark:hover:bg-neutral-900/50 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 transition-all flex items-center justify-center"
+              className="w-10 h-10 md:w-12 md:h-12 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/20 dark:bg-neutral-900/30 hover:bg-white/30 dark:hover:bg-neutral-900/50 border md:border-2 border-white/30 dark:border-white/10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl shadow-black/20 transition-all flex items-center justify-center"
               title={isFavorite(article.id) ? "Remove from Favorites" : "Add to Favorites"}
             >
               {isFavorite(article.id) ? (
-                <Heart className="w-5 h-5 text-red-500 fill-red-500" />
+                <Heart className="w-4 h-4 md:w-5 md:h-5 text-red-500 fill-red-500" />
               ) : (
-                <Heart className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <Heart className="w-4 h-4 md:w-5 md:h-5 text-gray-600 dark:text-gray-400" />
               )}
             </button>
           </motion.div>
 
           {/* Page Navigation - Bottom Center */}
           <motion.div
-            className="absolute -bottom-[53px] left-10 right-3 mx-auto w-fit z-50"
+            className="absolute bottom-2 md:-bottom-[53px] left-2 right-2 md:left-10 md:right-3 mx-auto w-fit z-50"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
           >
-            <div className="flex items-center gap-1 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-neutral-900/20 border-2 border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/20 p-1">
+            <div className="flex items-center gap-1 backdrop-blur-[20px] backdrop-saturate-[200%] bg-white/10 dark:bg-neutral-900/20 border md:border-2 border-white/30 dark:border-white/10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl shadow-black/20 p-1">
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevPage(); }}
                 disabled={currentPage === 1 || isFlipping}
-                className="px-3 py-2 rounded-xl hover:bg-white/20 dark:hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center backdrop-blur-sm"
+                className="px-2 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl hover:bg-white/20 dark:hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center backdrop-blur-sm"
                 title="Previous Page"
               >
                 <ChevronLeft className="w-4 h-4 text-gray-800 dark:text-amber-100" />
               </button>
 
-              <div className="px-4 py-2 flex items-center gap-2">
-                <BookOpen className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                <span className="text-xs font-semibold text-gray-800 dark:text-amber-50 min-w-[50px] text-center">
+              <div className="px-2 md:px-4 py-1.5 md:py-2 flex items-center gap-1 md:gap-2">
+                <BookOpen className="w-3 h-3 md:w-3.5 md:h-3.5 text-amber-600 dark:text-amber-400" />
+                <span className="text-[10px] md:text-xs font-semibold text-gray-800 dark:text-amber-50 min-w-[40px] md:min-w-[50px] text-center">
                   {currentPage} / {totalPages}
+                </span>
+                <span className="md:hidden text-[10px] font-semibold text-gray-600 dark:text-gray-400">
+                  ({readingProgress}%)
                 </span>
               </div>
 
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextPage(); }}
                 disabled={currentPage === totalPages || isFlipping}
-                className="px-3 py-2 rounded-xl hover:bg-white/20 dark:hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center backdrop-blur-sm"
+                className="px-2 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl hover:bg-white/20 dark:hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center backdrop-blur-sm"
                 title="Next Page"
               >
                 <ChevronRight className="w-4 h-4 text-gray-800 dark:text-amber-100" />
@@ -332,7 +468,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
           {/* Main Book Container */}
           <motion.div
             ref={bookRef}
-            className="relative"
+            className="relative w-full h-full md:w-auto md:h-auto"
             style={{ perspective: '3000px' }}
             initial={{
               x: clickPosition.x - window.innerWidth / 2,
@@ -355,12 +491,12 @@ export const BookReader: React.FC<BookReaderProps> = ({
             }}
             onClick={(e) => e.stopPropagation()}
           >
-          {/* Book Itself - Smaller Size */}
-          <div className="relative w-[1000px] h-[600px] flex items-center justify-center">
+          {/* Book Itself - Responsive Size */}
+          <div className="relative w-full h-full md:w-[1000px] md:h-[600px] flex items-center justify-center px-4 md:px-0">
             
             {/* Open Book */}
             <motion.div
-              className="relative flex"
+              className="relative flex w-full max-w-[900px] md:max-w-none"
               style={{ 
                 transformStyle: 'preserve-3d',
                 filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5))'
@@ -376,7 +512,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
             >
               {/* Book Spine */}
               <div 
-                className="absolute left-1/2 top-0 bottom-0 w-12 -translate-x-1/2 z-20"
+                className="absolute left-1/2 top-0 bottom-0 w-8 md:w-12 -translate-x-1/2 z-20"
                 style={{
                   background: 'linear-gradient(to right, #2a2a2a 0%, #3a3a3a 50%, #2a2a2a 100%)',
                   boxShadow: 'inset -3px 0 10px rgba(0, 0, 0, 0.8), inset 3px 0 10px rgba(0, 0, 0, 0.8)',
@@ -386,7 +522,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
 
               {/* Left Page - With Front and Back */}
               <motion.div
-                className="relative w-[460px] h-[600px] rounded-l-lg overflow-hidden"
+                className="relative w-[calc(50%-16px)] md:w-[460px] h-[500px] md:h-[600px] rounded-l-lg overflow-hidden"
                 style={{
                   transformStyle: 'preserve-3d',
                   transformOrigin: 'right center',
